@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bartek Wąsik - Ultimate Skill Showcase</title>
+    <title>Bartek Wąsik - Ultimate Skill Showcase v2.0</title>
     
+    <!-- Favicon - mała rzecz, a cieszy -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👾</text></svg>">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -58,7 +61,7 @@
             max-width: 900px;
         }
 
-        /* --- NAWIGACJA --- */
+        /* --- NAWIGACJA & MOBILE MENU --- */
         nav { position: fixed; top: 0; left: 0; width: 100%; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--bg-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 1000; border-bottom: 1px solid var(--border-color); }
         .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-light); text-decoration: none; text-shadow: 0 0 5px var(--primary-neon); }
         .logo span { color: var(--primary-neon); }
@@ -66,6 +69,10 @@
         .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary-neon); transition: width 0.3s ease; }
         .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
         .nav-links a:hover, .nav-links a.active { color: var(--primary-neon); text-shadow: 0 0 8px var(--primary-neon); }
+        
+        #menu-toggle { display: none; background: none; border: none; color: var(--text-light); font-size: 2rem; cursor: pointer; z-index: 1001; }
+        
+        @keyframes glowing { 0% { box-shadow: 0 0 5px var(--primary-neon); } 50% { box-shadow: 0 0 20px var(--primary-neon); } 100% { box-shadow: 0 0 5px var(--primary-neon); } }
 
         /* --- SEKCJA HERO --- */
         .hero { height: 100vh; text-align: center; }
@@ -77,7 +84,7 @@
         /* --- SEKCJA UMIEJĘTNOŚCI --- */
         #umiejetnosci .skills-container { display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; width: 100%; }
         .skill-card { background: var(--bg-glass); backdrop-filter: blur(10px); padding: 2.5rem; border-radius: 20px; border: 1px solid var(--border-color); flex-basis: 450px; flex-grow: 1; transition: transform 0.4s ease, box-shadow 0.4s ease; box-shadow: 0 8px 30px var(--shadow-color); }
-        .skill-card:hover { transform: translateY(-15px) scale(1.03); box-shadow: 0 20px 40px var(--shadow-color); }
+        .skill-card:hover { transform: translateY(-15px) scale(1.03); box-shadow: 0 20px 40px var(--shadow-color), 0 0 15px var(--primary-neon); }
         .skill-card h3 { font-size: 2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
         .skill-card.programmer h3 { color: var(--primary-neon); text-shadow: 0 0 8px var(--primary-neon); }
         .skill-card.gambler h3 { color: var(--secondary-neon); text-shadow: 0 0 8px var(--secondary-neon); }
@@ -88,33 +95,37 @@
         .skill-card.programmer li i { color: var(--primary-neon); }
         .skill-card.gambler li i { color: var(--secondary-neon); }
 
-        /* --- SEKCJA KASYNO - ZAKŁADKI I KONTROLA --- */
-        .tab-buttons { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); }
+        /* --- SEKCJA KASYNO - OGÓLNE --- */
+        .tab-buttons { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; justify-content: center; }
         .tab-button { padding: 0.8rem 1.5rem; background: transparent; border: none; color: var(--text-dark); font-size: 1.1rem; font-weight: 600; cursor: pointer; position: relative; transition: color 0.3s ease; }
         .tab-button::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 0; height: 3px; background: var(--primary-neon); transition: width 0.3s ease; border-radius: 2px; }
         .tab-button.active { color: var(--text-light); }
         .tab-button.active::after { width: 100%; }
-        
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeInContent 0.5s ease; }
         @keyframes fadeInContent { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        
         .game-controls { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin-top: 1.5rem; }
         .game-controls .bet-input { display: flex; flex-direction: column; align-items: center; }
         .game-controls label { font-size: 1rem; color: var(--text-dark); margin-bottom: 0.5rem; }
-        .game-controls input[type="number"] { max-width: 200px; text-align: center; padding: 0.8rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-light); font-size: 1.2rem; font-family: 'Roboto Mono'; }
+        .game-controls input[type="number"] { max-width: 200px; text-align: center; padding: 0.8rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-light); font-size: 1.2rem; font-family: 'Roboto Mono'; -moz-appearance: textfield; }
+        .game-controls input[type="number"]::-webkit-outer-spin-button, .game-controls input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .game-controls input[type="number"]:focus { outline: none; border-color: var(--primary-neon); box-shadow: 0 0 10px var(--primary-neon); }
         .game-controls .play-button { padding: 1rem 2.5rem; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; background: var(--primary-neon); color: var(--bg-dark); }
-        .game-controls .play-button:hover:not(:disabled) { box-shadow: 0 0 15px var(--primary-neon); }
-        .game-controls .play-button:disabled { background: #334155; color: #64748b; cursor: not-allowed; box-shadow: none; }
-        .balance-display { text-align: center; margin-bottom: 2rem; font-size: 1.2rem; color: var(--text-dark); }
-        .balance-display span { font-size: 2.5rem; color: var(--gold-neon); font-family: 'Roboto Mono'; text-shadow: 0 0 8px var(--gold-neon); display: block; }
+        .game-controls .play-button:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 0 15px var(--primary-neon); }
+        .game-controls .play-button:disabled { background: #334155; color: #64748b; cursor: not-allowed; box-shadow: none; transform: translateY(0); }
         
+        .balance-container { text-align: center; margin-bottom: 2rem; }
+        .balance-display { font-size: 1.2rem; color: var(--text-dark); }
+        .balance-display span { font-size: 2.5rem; color: var(--gold-neon); font-family: 'Roboto Mono'; text-shadow: 0 0 8px var(--gold-neon); display: block; transition: color 0.3s, text-shadow 0.3s; }
+        .refill-button { background: transparent; border: 1px solid var(--gold-neon); color: var(--gold-neon); padding: 0.5rem 1rem; border-radius: 8px; margin-top: 1rem; cursor: pointer; transition: all 0.3s; display: none; }
+        .refill-button:hover { background: var(--gold-neon); color: var(--bg-dark); box-shadow: 0 0 10px var(--gold-neon); }
+
         /* --- KASYNO: CRASH --- */
         #crash-game { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
         .crash-graph-container { width: 100%; background: var(--bg-light); border-radius: 20px; border: 1px solid var(--border-color); height: 300px; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
         #crash-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .crash-multiplier { font-family: 'Roboto Mono'; font-size: 4rem; font-weight: 700; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; }
+        .crash-multiplier { font-family: 'Roboto Mono'; font-size: 4rem; font-weight: 700; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; transition: color 0.3s, text-shadow 0.3s; }
         .crash-multiplier.color-green { color: var(--green-neon); text-shadow: 0 0 15px var(--green-neon); }
         .crash-multiplier.color-red { color: var(--red-neon); text-shadow: 0 0 15px var(--red-neon); }
         .crash-history { width: 100%; margin-top: 1rem; }
@@ -127,22 +138,28 @@
         /* --- KASYNO: ROULETTE --- */
         #roulette-game { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
         .roulette-container { position: relative; width: 300px; height: 300px; }
-        .roulette-wheel { width: 100%; height: 100%; border-radius: 50%; border: 10px solid var(--gold-neon); background-image: conic-gradient(var(--green-neon) 0 9.7deg, var(--red-neon) 9.7deg 19.4deg, var(--bg-dark) 19.4deg 29.1deg, var(--red-neon) 29.1deg 38.8deg, var(--bg-dark) 38.8deg 48.5deg, var(--red-neon) 48.5deg 58.2deg, var(--bg-dark) 58.2deg 67.9deg, var(--red-neon) 67.9deg 77.6deg, var(--bg-dark) 77.6deg 87.3deg, var(--red-neon) 87.3deg 97deg, var(--bg-dark) 97deg 106.7deg, var(--red-neon) 106.7deg 116.4deg, var(--bg-dark) 116.4deg 126.1deg, var(--red-neon) 126.1deg 135.8deg, var(--bg-dark) 135.8deg 145.5deg, var(--red-neon) 145.5deg 155.2deg, var(--bg-dark) 155.2deg 164.9deg, var(--red-neon) 164.9deg 174.6deg, var(--bg-dark) 174.6deg 184.3deg, var(--red-neon) 184.3deg 194deg, var(--bg-dark) 194deg 203.7deg, var(--red-neon) 203.7deg 213.4deg, var(--bg-dark) 213.4deg 223.1deg, var(--red-neon) 223.1deg 232.8deg, var(--bg-dark) 232.8deg 242.5deg, var(--red-neon) 242.5deg 252.2deg, var(--bg-dark) 252.2deg 261.9deg, var(--red-neon) 261.9deg 271.6deg, var(--bg-dark) 271.6deg 281.3deg, var(--red-neon) 281.3deg 291deg, var(--bg-dark) 291deg 300.7deg, var(--red-neon) 300.7deg 310.4deg, var(--bg-dark) 310.4deg 320.1deg, var(--red-neon) 320.1deg 329.8deg, var(--bg-dark) 329.8deg 339.5deg, var(--red-neon) 339.5deg 349.2deg, var(--bg-dark) 349.2deg 360deg); transition: transform 6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .roulette-wheel { width: 100%; height: 100%; border-radius: 50%; border: 10px solid var(--gold-neon); background-image: conic-gradient(var(--green-neon) 0 9.7deg, var(--red-neon) 9.7deg 19.4deg, var(--bg-dark) 19.4deg 29.1deg, var(--red-neon) 29.1deg 38.8deg, var(--bg-dark) 38.8deg 48.5deg, var(--red-neon) 48.5deg 58.2deg, var(--bg-dark) 58.2deg 67.9deg, var(--red-neon) 67.9deg 77.6deg, var(--bg-dark) 77.6deg 87.3deg, var(--red-neon) 87.3deg 97deg, var(--bg-dark) 97deg 106.7deg, var(--red-neon) 106.7deg 116.4deg, var(--bg-dark) 116.4deg 126.1deg, var(--red-neon) 126.1deg 135.8deg, var(--bg-dark) 135.8deg 145.5deg, var(--red-neon) 145.5deg 155.2deg, var(--bg-dark) 155.2deg 164.9deg, var(--red-neon) 164.9deg 174.6deg, var(--bg-dark) 174.6deg 184.3deg, var(--red-neon) 184.3deg 194deg, var(--bg-dark) 194deg 203.7deg, var(--red-neon) 203.7deg 213.4deg, var(--bg-dark) 213.4deg 223.1deg, var(--red-neon) 223.1deg 232.8deg, var(--bg-dark) 232.8deg 242.5deg, var(--red-neon) 242.5deg 252.2deg, var(--bg-dark) 252.2deg 261.9deg, var(--red-neon) 261.9deg 271.6deg, var(--bg-dark) 271.6deg 281.3deg, var(--red-neon) 281.3deg 291deg, var(--bg-dark) 291deg 300.7deg, var(--red-neon) 300.7deg 310.4deg, var(--bg-dark) 310.4deg 320.1deg, var(--red-neon) 320.1deg 329.8deg, var(--bg-dark) 329.8deg 339.5deg, var(--red-neon) 339.5deg 349.2deg, var(--bg-dark) 349.2deg 360deg); transition: transform 6s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 0 20px var(--gold-neon); }
+        .roulette-number { position: absolute; top: 20px; left: 50%; transform-origin: 0 130px; color: white; font-size: 14px; font-weight: bold; text-align: center; }
         .roulette-wheel::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: var(--bg-dark); border-radius: 50%; border: 5px solid var(--gold-neon); z-index: 2; }
-        .roulette-ball { position: absolute; top: 15px; left: calc(50% - 7.5px); width: 15px; height: 15px; background: white; border-radius: 50%; z-index: 1; transform-origin: 135px 135px; }
-        .roulette-marker { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 20px solid var(--gold-neon); }
-        .roulette-betting-options { display: flex; gap: 1rem; }
+        .roulette-marker { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 20px solid var(--gold-neon); z-index: 5; }
+        .roulette-betting-options { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
         .roulette-betting-options .bet-option { padding: 0.8rem 1.5rem; border: 2px solid var(--border-color); border-radius: 10px; cursor: pointer; transition: all 0.3s ease; }
-        .roulette-betting-options .bet-option.red { border-color: var(--red-neon); }
-        .roulette-betting-options .bet-option.black { border-color: var(--text-dark); }
-        .roulette-betting-options .bet-option.selected { transform: scale(1.1); box-shadow: 0 0 15px var(--primary-neon); }
-        .roulette-result { font-family: 'Roboto Mono'; font-size: 1.5rem; font-weight: 700; min-height: 2rem; }
+        .roulette-betting-options .bet-option.red { border-color: var(--red-neon); color: var(--red-neon); }
+        .roulette-betting-options .bet-option.red:hover { background-color: var(--red-neon); color: var(--bg-dark); }
+        .roulette-betting-options .bet-option.black { border-color: var(--text-dark); color: var(--text-dark); }
+        .roulette-betting-options .bet-option.black:hover { background-color: var(--text-dark); color: var(--bg-dark); }
+        .roulette-betting-options .bet-option.number { border-color: var(--primary-neon); color: var(--primary-neon); }
+        .roulette-betting-options .bet-option.number:hover { background-color: var(--primary-neon); color: var(--bg-dark); }
+        .roulette-betting-options .bet-option.selected { transform: scale(1.1); box-shadow: 0 0 15px currentColor; background-color: currentColor; color: var(--bg-dark); animation: glowing-border 2s infinite; }
+        @keyframes glowing-border { 0% { box-shadow: 0 0 5px currentColor; } 50% { box-shadow: 0 0 20px currentColor; } 100% { box-shadow: 0 0 5px currentColor; } }
+        #roulette-number-bet-container { display: none; }
+        #roulette-result { font-family: 'Roboto Mono'; font-size: 1.5rem; font-weight: 700; min-height: 2rem; }
 
         /* --- KASYNO: COINFLIP --- */
         #coinflip-game { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
         .coin-container { width: 200px; height: 200px; perspective: 1000px; }
         .coin { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.5s cubic-bezier(0.5, 0, 0.5, 1); }
-        .coin-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 6rem; }
+        .coin-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 6rem; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
         .coin-ct { background: linear-gradient(135deg, #0077be, #00c3ff); color: white; }
         .coin-t { background: linear-gradient(135deg, #ff8c00, #ffc400); color: var(--bg-dark); transform: rotateY(180deg); }
         .coin.flipping-ct { transform: rotateY(3600deg); }
@@ -151,13 +168,13 @@
         .coinflip-betting-options .bet-option { border: 2px solid transparent; border-radius: 10px; cursor: pointer; transition: all 0.3s; padding: 1rem; font-size: 3rem; }
         .coinflip-betting-options .bet-option.ct-choice { color: #00c3ff; }
         .coinflip-betting-options .bet-option.t-choice { color: #ffc400; }
-        .coinflip-betting-options .bet-option.selected { transform: scale(1.1); text-shadow: 0 0 15px currentColor; }
+        .coinflip-betting-options .bet-option.selected { transform: scale(1.1); text-shadow: 0 0 15px currentColor; animation: glowing-border 2s infinite alternate; }
         .coinflip-result { font-family: 'Roboto Mono'; font-size: 1.5rem; font-weight: 700; min-height: 2rem; }
 
         /* --- SEKCJA SNAKE --- */
         #gra .game-container { padding: 2rem; width: auto; }
         #snake-canvas { background-color: var(--bg-dark); border: 2px solid var(--primary-neon); box-shadow: 0 0 15px var(--primary-neon); border-radius: 10px; }
-        .game-info { font-family: 'Roboto Mono', monospace; font-size: 1.2rem; color: var(--text-dark); text-align: center; }
+        .game-info { font-family: 'Roboto Mono', monospace; font-size: 1.2rem; color: var(--text-dark); text-align: center; margin-top: 1rem; }
         .game-info span { color: var(--secondary-neon); font-weight: 700; text-shadow: 0 0 8px var(--secondary-neon); }
 
         /* --- SEKCJA GALERIA & LIGHTBOX --- */
@@ -189,12 +206,27 @@
         .social-links a.discord:hover { color: #5865F2; text-shadow: 0 0 15px #5865F2; }
         footer { text-align: center; padding: 2rem; background: var(--bg-light); border-top: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-dark); }
 
+        /* --- ANIMACJE --- */
+        .animated { opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .animated.fade-in { transform: translateY(20px); }
+        .animated.slide-in-left { transform: translateX(-50px); }
+        .animated.slide-in-right { transform: translateX(50px); }
+        .animated.visible { opacity: 1; transform: translate(0, 0); }
+
+
         /* --- RESPONSYWNOŚĆ --- */
+        @media (max-width: 900px) {
+             section { padding: 5rem 5%; }
+        }
         @media (max-width: 768px) {
             .hero-content h1 { font-size: 2.8rem; }
             .hero-content .subtitle { font-size: 1.4rem; }
-            .nav-links { display: none; }
             .section-title { font-size: 2.2rem; }
+            #menu-toggle { display: block; }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 250px; height: 100vh; background: var(--bg-light); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: right 0.4s ease-in-out; }
+            .nav-links.active { right: 0; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+            .nav-links a { margin: 1.5rem 0; font-size: 1.2rem; }
+            .crash-multiplier { font-size: 3rem; }
         }
     </style>
 </head>
@@ -203,13 +235,14 @@
 
     <nav>
         <a href="#" class="logo">Bartek<span>.dev</span></a>
-        <div class="nav-links">
+        <div class="nav-links" id="nav-links">
             <a href="#umiejetnosci" class="nav-link">Specjalizacje</a>
             <a href="#kasyno" class="nav-link">Kasyno</a>
             <a href="#gra" class="nav-link">Gra</a>
             <a href="#galeria" class="nav-link">Galeria</a>
             <a href="#kontakt" class="nav-link">Kontakt</a>
         </div>
+        <button id="menu-toggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
     </nav>
 
     <header class="hero" id="hero">
@@ -249,9 +282,12 @@
         <section id="kasyno">
             <h2 class="section-title animated fade-in">Centrum Gier</h2>
             <div class="main-container animated fade-in">
-                <div class="balance-display">
-                    TWOJE WIRTUALNE SALDO
-                    <span id="casino-balance">1000.00</span>
+                <div class="balance-container">
+                    <div class="balance-display">
+                        TWOJE WIRTUALNE SALDO
+                        <span id="casino-balance-amount">1000.00</span>
+                    </div>
+                    <button id="refill-button" class="refill-button">DOŁADUJ KONTO (1000)</button>
                 </div>
                 <div class="tab-buttons">
                     <button class="tab-button active" data-tab="crash-game">Crash</button>
@@ -283,11 +319,15 @@
                         <div class="roulette-marker"></div>
                     </div>
                     <div class="game-controls">
-                         <div id="roulette-result" class="roulette-result">Wybierz zakład i zakręć!</div>
+                        <div id="roulette-result" class="roulette-result">Wybierz zakład i zakręć!</div>
                         <div class="roulette-betting-options">
-                            <button class="bet-option red" data-bet="red">2x</button>
-                            <button class="bet-option black" data-bet="black">2x</button>
-                            <button class="bet-option" data-bet="number">Obstaw numer (35x)</button>
+                            <button class="bet-option red" data-bet="red">CZERWONE (2x)</button>
+                            <button class="bet-option black" data-bet="black">CZARNE (2x)</button>
+                            <button class="bet-option number" data-bet="number">NUMER (35x)</button>
+                        </div>
+                        <div id="roulette-number-bet-container" class="bet-input">
+                            <label for="roulette-number-bet">Wybierz numer (0-36)</label>
+                            <input type="number" id="roulette-number-bet" min="0" max="36" value="7">
                         </div>
                         <div class="bet-input">
                             <label for="roulette-bet-amount">Kwota zakładu</label>
@@ -317,7 +357,6 @@
                         <button id="coinflip-button" class="play-button">RZUĆ MONETĄ</button>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -375,18 +414,26 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 Stworzone z pasją dla Bartka. Powodzenia na obu frontach, Legendo!</p>
+        <p>&copy; 2024 Stworzone z pasją dla Bartka. Powodzenia na obu frontach, Legendo! | Upgraded by AI.</p>
     </footer>
+
+    <!-- Audio Effects -->
+    <audio id="audio-click" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_249156e103.mp3" preload="auto"></audio>
+    <audio id="audio-win" src="https://cdn.pixabay.com/download/audio/2022/11/22/audio_62c64b6392.mp3" preload="auto"></audio>
+    <audio id="audio-lose" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_b2f90a1fcf.mp3" preload="auto"></audio>
+    <audio id="audio-flip" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0a50b0f.mp3" preload="auto"></audio>
+
 
 <script>
 // =================================================================================
-//  APLIKACJA GŁÓWNA - ZORGANIZOWANA STRUKTURA KODU
+//  APLIKACJA GŁÓWNA - NAJLEPSZA WERSJA
 // =================================================================================
 const App = {
     // --- Inicjalizacja wszystkich modułów ---
     init() {
         this.displayAntiCheatMessage();
         document.addEventListener('DOMContentLoaded', () => {
+            this.setupMobileMenu();
             this.setupTypingEffect();
             this.setupScrollAnimations();
             this.setupScrollSpy();
@@ -395,33 +442,14 @@ const App = {
             this.SnakeGame.init();
             this.Gallery.init();
             this.Particles.init();
+            this.Sound.init();
         });
     },
     
     // --- OSTRZEŻENIE DLA HAKERÓW ---
     displayAntiCheatMessage() {
-        const styles = [
-            'font-size: 14px',
-            'font-family: monospace',
-            'background: #0a0f1f',
-            'color: #ff1f4f',
-            'font-weight: bold',
-            'padding: 10px',
-            'border-radius: 5px',
-            'border: 1px solid #ff1f4f'
-        ].join(';');
-        const warningText = `
- ██████╗ ██╗      ██████╗  ██████╗██╗  ██╗
-██╔═══██╗██║     ██╔═══██╗██╔════╝██║  ██║
-██║   ██║██║     ██║   ██║██║     ███████║
-██║   ██║██║     ██║   ██║██║     ██╔══██║
-╚██████╔╝███████╗╚██████╔╝╚██████╗██║  ██║
- ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝
- 
- >>> DOSTĘP ZABRONIONY! <<<
- Myślisz, że możesz tu grzebać? Ta strona została stworzona przez mistrza.
- Wszelkie próby manipulacji wirtualnym saldem zostaną... zauważone. ;)
-`;
+        const styles = ['font-size: 14px','font-family: monospace','background: #0a0f1f','color: #ff1f4f','font-weight: bold','padding: 10px','border-radius: 5px','border: 1px solid #ff1f4f'].join(';');
+        const warningText = `\n ██████╗ ██╗      ██████╗  ██████╗██╗  ██╗\n██╔═══██╗██║     ██╔═══██╗██╔════╝██║  ██║\n██║   ██║██║     ██║   ██║██║     ███████║\n██║   ██║██║     ██║   ██║██║     ██╔══██║\n╚██████╔╝███████╗╚██████╔╝╚██████╗██║  ██║\n ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝\n \n >>> DOSTĘP ZABRONIONY! <<<\n Myślisz, że możesz tu grzebać? Ta strona została stworzona przez mistrza.\n Wszelkie próby manipulacji wirtualnym saldem zostaną... zauważone. ;)`;
         console.log(`%c${warningText}`, styles);
     },
 
@@ -436,15 +464,18 @@ const App = {
             const currentPhrase = phrases[phraseIndex];
             let typeSpeed = 150;
             if (isDeleting) {
-                typingText.textContent = currentPhrase.substring(0, charIndex-- - 1);
+                typingText.textContent = currentPhrase.substring(0, charIndex--);
             } else {
-                typingText.textContent = currentPhrase.substring(0, charIndex++ + 1);
+                typingText.textContent = currentPhrase.substring(0, charIndex++);
             }
-            if (!isDeleting && charIndex === currentPhrase.length) {
+
+            if (!isDeleting && charIndex === currentPhrase.length + 1) {
                 typeSpeed = 2000; isDeleting = true;
             } else if (isDeleting && charIndex === 0) {
                 isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; typeSpeed = 500;
-            } else if (isDeleting) { typeSpeed = 75; }
+            } else if (isDeleting) { 
+                typeSpeed = 75; 
+            }
             setTimeout(type, typeSpeed);
         }
         type();
@@ -457,6 +488,7 @@ const App = {
 
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
+                App.Sound.play('click');
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
 
@@ -470,14 +502,93 @@ const App = {
         });
     },
 
+    // --- Mobilne Menu ---
+    setupMobileMenu() {
+        const toggleBtn = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        if(!toggleBtn || !navLinks) return;
+
+        toggleBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            })
+        });
+    },
+
     // --- Animacje na scroll ---
-    setupScrollAnimations() { /* ... bez zmian ... */ },
+    setupScrollAnimations() { 
+        const animatedElements = document.querySelectorAll('.animated');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        animatedElements.forEach(el => observer.observe(el));
+    },
+
     // --- Inteligentna nawigacja (Scroll Spy) ---
-    setupScrollSpy() { /* ... bez zmian ... */ },
+    setupScrollSpy() { 
+        const sections = document.querySelectorAll('section, header');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { rootMargin: '-50% 0px -50% 0px' });
+        sections.forEach(section => { if (section.id) observer.observe(section); });
+    },
+    
+    // --- Moduł dźwięków ---
+    Sound: {
+        sounds: {},
+        init() {
+            this.sounds.click = document.getElementById('audio-click');
+            this.sounds.win = document.getElementById('audio-win');
+            this.sounds.lose = document.getElementById('audio-lose');
+            this.sounds.flip = document.getElementById('audio-flip');
+            Object.values(this.sounds).forEach(sound => sound.volume = 0.4);
+        },
+        play(soundName) {
+            if (this.sounds[soundName]) {
+                this.sounds[soundName].currentTime = 0;
+                this.sounds[soundName].play().catch(e => console.log("Audio play prevented."));
+            }
+        }
+    },
+
     // --- Tło z cząsteczkami ---
-    Particles: { /* ... bez zmian ... */ },
+    Particles: {
+        canvas: null, ctx: null, particles: [], mouse: { x: null, y: null }, config: { count: 50, speed: 0.5, radius: 2, lineColor: 'rgba(0, 242, 254, 0.2)', maxDistance: 120 },
+        init() { this.canvas = document.getElementById('particle-canvas'); if (!this.canvas) return; this.ctx = this.canvas.getContext('2d'); this.resizeCanvas(); this.createParticles(); this.animate(); window.addEventListener('resize', () => this.resizeCanvas()); window.addEventListener('mousemove', (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; }); window.addEventListener('mouseout', () => { this.mouse.x = null; this.mouse.y = null; }); },
+        resizeCanvas() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; this.config.count = Math.floor((this.canvas.width * this.canvas.height) / 25000); this.createParticles(); },
+        createParticles() { this.particles = []; for (let i = 0; i < this.config.count; i++) { this.particles.push({ x: Math.random() * this.canvas.width, y: Math.random() * this.canvas.height, vx: (Math.random() - 0.5) * this.config.speed, vy: (Math.random() - 0.5) * this.config.speed, }); } },
+        draw() { this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); this.ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-neon'); this.particles.forEach(p => { this.ctx.beginPath(); this.ctx.arc(p.x, p.y, this.config.radius, 0, Math.PI * 2); this.ctx.fill(); }); this.drawLines(); },
+        drawLines() { this.ctx.strokeStyle = this.config.lineColor; this.ctx.lineWidth = 1; for (let i = 0; i < this.particles.length; i++) { for (let j = i; j < this.particles.length; j++) { const dist = Math.hypot(this.particles[i].x - this.particles[j].x, this.particles[i].y - this.particles[j].y); if (dist < this.config.maxDistance) { this.ctx.beginPath(); this.ctx.moveTo(this.particles[i].x, this.particles[i].y); this.ctx.lineTo(this.particles[j].x, this.particles[j].y); this.ctx.stroke(); } } } },
+        update() { this.particles.forEach(p => { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1; if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1; if (this.mouse.x) { const dist = Math.hypot(this.mouse.x - p.x, this.mouse.y - p.y); if (dist < this.config.maxDistance * 1.5) { p.x -= (this.mouse.x - p.x) * 0.01; p.y -= (this.mouse.y - p.y) * 0.01; } } }); },
+        animate() { this.draw(); this.update(); requestAnimationFrame(() => this.animate()); }
+    },
+    
     // --- Galeria z Lightboxem ---
-    Gallery: { /* ... bez zmian ... */ },
+    Gallery: {
+        els: {},
+        init() { this.els = { lightbox: document.getElementById('lightbox'), img: document.getElementById('lightbox-img'), title: document.getElementById('lightbox-title'), desc: document.getElementById('lightbox-desc'), closeBtn: document.getElementById('lightbox-close'), galleryItems: document.querySelectorAll('.gallery-item') }; if (!this.els.lightbox) return; this.els.galleryItems.forEach(item => { item.addEventListener('click', () => this.open(item)); }); this.els.closeBtn.addEventListener('click', () => this.close()); this.els.lightbox.addEventListener('click', (e) => { if (e.target === this.els.lightbox) this.close(); }); document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.els.lightbox.classList.contains('show')) this.close(); }); },
+        open(item) { this.els.img.src = item.querySelector('img').src; this.els.title.textContent = item.dataset.title; this.els.desc.textContent = item.dataset.desc; this.els.lightbox.classList.add('show'); },
+        close() { this.els.lightbox.classList.remove('show'); }
+    },
 
     // --- MODUŁ KASYNA (NOWA ZORGANIZOWANA STRUKTURA) ---
     Casino: {
@@ -485,46 +596,60 @@ const App = {
         state: { balance: 1000.00 },
 
         init() {
-            this.els.balanceDisplay = document.getElementById('casino-balance');
+            this.els.balanceDisplay = document.getElementById('casino-balance-amount');
+            this.els.refillButton = document.getElementById('refill-button');
             this.updateBalanceDisplay();
+            this.els.refillButton.addEventListener('click', () => this.refillBalance());
+
             this.Crash.init(this);
             this.Roulette.init(this);
             this.Coinflip.init(this);
         },
         
-        updateBalance(amount, showWin=false, showLoss=false) {
+        updateBalance(amount) {
             this.state.balance += amount;
+            const balanceSpan = this.els.balanceDisplay;
+
+            if (amount > 0) { // Wygrana
+                balanceSpan.style.color = 'var(--green-neon)';
+                balanceSpan.style.textShadow = '0 0 15px var(--green-neon)';
+                App.Sound.play('win');
+            } else { // Przegrana
+                balanceSpan.style.color = 'var(--red-neon)';
+                balanceSpan.style.textShadow = '0 0 15px var(--red-neon)';
+                if (amount < 0) App.Sound.play('lose');
+            }
+
             this.updateBalanceDisplay();
             
-            const display = this.els.balanceDisplay;
-            if(showWin) {
-                display.style.color = 'var(--green-neon)';
-                display.style.textShadow = '0 0 15px var(--green-neon)';
-            } else if(showLoss) {
-                display.style.color = 'var(--red-neon)';
-                display.style.textShadow = '0 0 15px var(--red-neon)';
-            }
             setTimeout(() => {
-                display.style.color = 'var(--gold-neon)';
-                display.style.textShadow = '0 0 8px var(--gold-neon)';
-            }, 1000);
+                balanceSpan.style.color = '';
+                balanceSpan.style.textShadow = '';
+            }, 1200);
         },
 
         updateBalanceDisplay() {
             this.els.balanceDisplay.innerText = this.state.balance.toFixed(2);
+            if (this.state.balance <= 0) {
+                this.els.refillButton.style.display = 'inline-block';
+            } else {
+                this.els.refillButton.style.display = 'none';
+            }
+        },
+        
+        refillBalance() {
+            App.Sound.play('win');
+            this.state.balance = 1000.00;
+            this.updateBalanceDisplay();
         },
 
         // Sub-moduł: Crash
         Crash: {
-            parent: null, els: {}, state: { isGameRunning: false, multiplier: 1.0, animationFrameId: null },
+            parent: null, els: {}, state: { isGameRunning: false, multiplier: 1.0, animationFrameId: null, bet: 0 },
             init(parent) {
                 this.parent = parent;
                 this.els = {
-                    betAmount: document.getElementById('crash-bet-amount'),
-                    button: document.getElementById('crash-button'),
-                    multiplier: document.getElementById('crash-multiplier'),
-                    historyList: document.getElementById('history-list'),
-                    canvas: document.getElementById('crash-canvas'),
+                    betAmount: document.getElementById('crash-bet-amount'), button: document.getElementById('crash-button'), multiplier: document.getElementById('crash-multiplier'), historyList: document.getElementById('history-list'), canvas: document.getElementById('crash-canvas'),
                 };
                 this.els.ctx = this.els.canvas.getContext('2d');
                 this.els.button.addEventListener('click', () => this.handleButtonClick());
@@ -532,21 +657,22 @@ const App = {
                 this.resizeCanvas();
                 window.addEventListener('resize', () => this.resizeCanvas());
             },
-            handleButtonClick() { this.state.isGameRunning ? this.cashOut() : this.startGame(); },
+            handleButtonClick() { App.Sound.play('click'); this.state.isGameRunning ? this.cashOut() : this.startGame(); },
             startGame() {
                 const bet = parseFloat(this.els.betAmount.value);
-                if (isNaN(bet) || bet <= 0 || bet > this.parent.state.balance) return alert("Zły zakład!");
-                this.parent.updateBalance(-bet, false, true);
-                this.state.isGameRunning = true; this.state.multiplier = 1.00; this.state.crashPoint = 1 / (1 - Math.random());
+                if (isNaN(bet) || bet <= 0 || bet > this.parent.state.balance) return alert("Zły zakład! Sprawdź saldo.");
+                this.state.bet = bet;
+                this.parent.updateBalance(-bet);
+                this.state.isGameRunning = true; this.state.multiplier = 1.00; this.state.crashPoint = Math.max(1.01, 1 / (1 - Math.random()));
                 this.els.button.disabled = false; this.els.betAmount.disabled = true;
                 this.els.button.textContent = 'WYPŁAĆ!'; this.els.button.style.background = 'var(--green-neon)';
                 this.els.multiplier.classList.remove('color-green', 'color-red');
                 const gameLoop = () => {
                     this.state.multiplier += 0.01 + (this.state.multiplier * 0.005);
                     this.els.multiplier.textContent = `${this.state.multiplier.toFixed(2)}x`;
-                    this.els.button.textContent = `WYPŁAĆ ${(bet * this.state.multiplier).toFixed(2)}`;
+                    this.els.button.textContent = `WYPŁAĆ ${(this.state.bet * this.state.multiplier).toFixed(2)}`;
                     this.drawGraph(this.state.multiplier);
-                    if (this.state.multiplier >= 2.0) this.els.multiplier.classList.add('color-green');
+                    if (this.state.multiplier >= 2.0 && !this.els.multiplier.classList.contains('color-green')) this.els.multiplier.classList.add('color-green');
                     if (this.state.multiplier >= this.state.crashPoint) {
                         this.els.button.disabled = true; this.endGame(this.state.crashPoint);
                     } else { this.state.animationFrameId = requestAnimationFrame(gameLoop); }
@@ -554,11 +680,11 @@ const App = {
                 this.state.animationFrameId = requestAnimationFrame(gameLoop);
             },
             cashOut() {
-                this.els.button.disabled = true;
                 cancelAnimationFrame(this.state.animationFrameId);
                 this.state.isGameRunning = false;
-                const winnings = parseFloat(this.els.betAmount.value) * this.state.multiplier;
-                this.parent.updateBalance(winnings, true);
+                this.els.button.disabled = true;
+                const winnings = this.state.bet * this.state.multiplier;
+                this.parent.updateBalance(winnings);
                 this.els.multiplier.classList.add('color-green');
                 this.addToHistory(this.state.multiplier);
                 setTimeout(() => this.resetGameUI(), 2000);
@@ -573,107 +699,107 @@ const App = {
                 this.els.button.disabled = false; this.els.betAmount.disabled = false;
                 this.els.button.textContent = 'ZACZNIJ GRĘ'; this.els.button.style.background = 'var(--primary-neon)';
                 this.els.multiplier.classList.remove('color-green', 'color-red');
-                setTimeout(() => this.drawGraph(1, false, true), 1000);
+                setTimeout(() => { this.els.multiplier.textContent = '1.00x'; this.drawGraph(1, false, true);}, 500);
             },
-            addToHistory(value) { /* ... bez zmian ... */ },
-            resizeCanvas() { /* ... bez zmian ... */ },
-            drawGraph(multiplier, crashed = false, clear = false) { /* ... bez zmian ... */ },
+            addToHistory(value) {const item = document.createElement('div'); item.className = `history-item ${value < 2 ? 'low' : 'high'}`; item.textContent = `${value.toFixed(2)}x`; this.els.historyList.prepend(item); if (this.els.historyList.children.length > 15) this.els.historyList.lastChild.remove();},
+            resizeCanvas() {this.els.canvas.width = this.els.canvas.parentElement.clientWidth; this.els.canvas.height = this.els.canvas.parentElement.clientHeight;},
+            drawGraph(multiplier, crashed = false, clear = false) { const ctx = this.els.ctx; const w = this.els.canvas.width; const h = this.els.canvas.height; ctx.clearRect(0, 0, w, h); if (clear) return; const maxMultiplier = Math.max(2, multiplier * 1.2); const scaleY = h / maxMultiplier; const scaleX = w / (Math.log(maxMultiplier) / Math.log(1.2)); ctx.strokeStyle = 'rgba(148, 163, 184, 0.1)'; ctx.lineWidth = 1; for(let i = 1; i < 5; i++) { ctx.beginPath(); ctx.moveTo(0, h - (i * h / 5)); ctx.lineTo(w, h - (i * h / 5)); ctx.moveTo(i * w / 5, 0); ctx.lineTo(i * w / 5, h); ctx.stroke(); } ctx.beginPath(); ctx.moveTo(0, h); ctx.lineWidth = 3; ctx.strokeStyle = crashed ? getComputedStyle(document.documentElement).getPropertyValue('--red-neon') : getComputedStyle(document.documentElement).getPropertyValue('--green-neon'); const gradient = ctx.createLinearGradient(0, h, 0, 0); gradient.addColorStop(0, crashed ? '#ff1f4f' : '#39ff14'); gradient.addColorStop(1, crashed ? 'rgba(255,31,79,0)' : 'rgba(57,255,20,0)'); ctx.strokeStyle = gradient; for(let m = 1; m <= multiplier; m += 0.05) { const x = (Math.log(m) / Math.log(1.2)) * scaleX; const y = h - (m * scaleY); ctx.lineTo(x, y); } ctx.stroke(); if (crashed) { const x = (Math.log(multiplier) / Math.log(1.2)) * scaleX; const y = h - (multiplier * scaleY); ctx.fillStyle = 'white'; ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill(); } },
         },
         
-        // Sub-moduł: Roulette
         Roulette: {
-            parent: null, els: {}, state: { isSpinning: false, currentBet: null, currentRotation: 0 },
+            parent: null, els: {}, state: { isSpinning: false, currentBet: null, currentBetValue: null, currentRotation: 0 },
             config: {
                 numbers: [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26],
+                colors: { red: [32, 19, 21, 25, 34, 27, 36, 30, 23, 5, 16, 1, 20, 31, 22, 18, 29, 12, 35, 3, 26] },
                 segmentAngle: 360 / 37,
             },
             init(parent) {
                 this.parent = parent;
                 this.els = {
-                    wheel: document.getElementById('roulette-wheel'),
-                    button: document.getElementById('roulette-button'),
-                    betAmount: document.getElementById('roulette-bet-amount'),
-                    betOptions: document.querySelectorAll('#roulette-game .bet-option'),
-                    result: document.getElementById('roulette-result')
+                    wheel: document.getElementById('roulette-wheel'), button: document.getElementById('roulette-button'), betAmount: document.getElementById('roulette-bet-amount'), betOptions: document.querySelectorAll('#roulette-game .bet-option'), result: document.getElementById('roulette-result'), numberBetContainer: document.getElementById('roulette-number-bet-container'), numberBetInput: document.getElementById('roulette-number-bet'),
                 };
+                this.drawWheelNumbers();
                 this.els.button.addEventListener('click', () => this.spin());
                 this.els.betOptions.forEach(opt => opt.addEventListener('click', () => {
+                    App.Sound.play('click');
                     if (this.state.isSpinning) return;
                     this.els.betOptions.forEach(o => o.classList.remove('selected'));
                     opt.classList.add('selected');
                     this.state.currentBet = opt.dataset.bet;
-                    if(this.state.currentBet === 'number') {
-                        const num = prompt('Na jaki numer chcesz postawić (0-36)?');
-                        this.state.currentBetValue = parseInt(num, 10);
-                        if(isNaN(this.state.currentBetValue) || this.state.currentBetValue < 0 || this.state.currentBetValue > 36) {
-                            this.state.currentBet = null;
-                            opt.classList.remove('selected');
-                        }
-                    }
+                    this.els.numberBetContainer.style.display = (this.state.currentBet === 'number') ? 'flex' : 'none';
                 }));
             },
+            drawWheelNumbers() {
+                const wheel = this.els.wheel;
+                this.config.numbers.forEach((num, index) => {
+                    const angle = this.config.segmentAngle * index;
+                    const el = document.createElement('div');
+                    el.className = 'roulette-number';
+                    el.style.transform = `rotate(${angle + this.config.segmentAngle/2}deg) translateX(125px) rotate(-${angle + this.config.segmentAngle/2}deg)`;
+                    el.textContent = num;
+                    if(num === 0) el.style.color = 'var(--green-neon)';
+                    else if(this.config.colors.red.includes(num)) el.style.color = 'var(--red-neon)';
+                    wheel.appendChild(el);
+                });
+            },
             spin() {
+                App.Sound.play('click');
                 if (this.state.isSpinning || !this.state.currentBet) return alert('Wybierz zakład!');
                 const bet = parseFloat(this.els.betAmount.value);
-                if (isNaN(bet) || bet <= 0 || bet > this.parent.state.balance) return alert("Zły zakład!");
+                if (isNaN(bet) || bet <= 0 || bet > this.parent.state.balance) return alert("Zły zakład! Sprawdź saldo.");
 
                 this.state.isSpinning = true;
-                this.els.button.disabled = true;
+                this.els.button.disabled = true; this.els.betOptions.forEach(o => o.style.pointerEvents = 'none');
                 this.els.result.textContent = 'Kręci się...';
-                this.parent.updateBalance(-bet, false, true);
+                this.parent.updateBalance(-bet);
 
-                const randomSpins = Math.floor(Math.random() * 5) + 5; // 5-9 full rotations
-                const winningSegment = Math.floor(Math.random() * 37);
-                const finalAngle = (randomSpins * 360) + (winningSegment * this.config.segmentAngle);
+                const randomSpins = Math.floor(Math.random() * 5) + 5;
+                const winningSegmentIndex = Math.floor(Math.random() * 37);
+                const offsetAngle = this.config.segmentAngle / 2;
+                const finalAngle = (randomSpins * 360) + (winningSegmentIndex * this.config.segmentAngle) - offsetAngle;
                 
-                this.state.currentRotation += finalAngle;
+                this.state.currentRotation -= finalAngle;
                 this.els.wheel.style.transform = `rotate(${this.state.currentRotation}deg)`;
-
-                this.els.wheel.addEventListener('transitionend', () => {
-                    this.handleResult(winningSegment, bet);
-                }, { once: true });
+                
+                this.els.wheel.addEventListener('transitionend', () => this.handleResult(winningSegmentIndex, bet), { once: true });
             },
-            handleResult(winningSegment, bet) {
-                const winningNumber = this.config.numbers[winningSegment];
-                const isRed = [32, 19, 21, 25, 34, 27, 36, 30, 23, 5, 16, 1, 20, 31, 22, 18, 29, 12, 35, 3, 26].includes(winningNumber);
-                const isBlack = winningNumber !== 0 && !isRed;
+            handleResult(winningSegmentIndex, bet) {
+                const winningNumber = this.config.numbers[winningSegmentIndex];
+                const isRed = this.config.colors.red.includes(winningNumber);
                 const winningColor = winningNumber === 0 ? 'green' : (isRed ? 'red' : 'black');
                 
-                this.els.result.innerHTML = `Wypadło: <span style="color:var(--${winningColor}-neon)">${winningNumber}</span>`;
+                let colorVar = winningColor === 'green' ? 'green-neon' : (winningColor === 'red' ? 'red-neon' : 'text-light');
+                this.els.result.innerHTML = `Wypadło: <span style="color:var(--${colorVar}); text-shadow: 0 0 8px var(--${colorVar})">${winningNumber}</span>`;
                 
                 let winnings = 0;
-                if(this.state.currentBet === winningColor) {
-                    winnings = bet * 2;
-                } else if (this.state.currentBet === 'number' && this.state.currentBetValue === winningNumber) {
-                    winnings = bet * 35;
+                if(this.state.currentBet === winningColor) winnings = bet * 2;
+                else if (this.state.currentBet === 'number') {
+                    const userBetNumber = parseInt(this.els.numberBetInput.value);
+                    if (userBetNumber === winningNumber) winnings = bet * 35;
                 }
                 
                 if (winnings > 0) {
-                    this.parent.updateBalance(winnings, true);
+                    this.parent.updateBalance(winnings);
                     this.els.result.innerHTML += ' - Wygrałeś!';
                 } else {
                     this.els.result.innerHTML += ' - Przegrałeś.';
                 }
 
                 this.state.isSpinning = false;
-                this.els.button.disabled = false;
+                this.els.button.disabled = false; this.els.betOptions.forEach(o => o.style.pointerEvents = 'auto');
             }
         },
 
-        // Sub-moduł: Coinflip
         Coinflip: {
             parent: null, els: {}, state: { isFlipping: false, currentBet: null },
             init(parent) {
                 this.parent = parent;
                 this.els = {
-                    coin: document.getElementById('coin'),
-                    button: document.getElementById('coinflip-button'),
-                    betAmount: document.getElementById('coinflip-bet-amount'),
-                    betOptions: document.querySelectorAll('#coinflip-game .bet-option'),
-                    result: document.getElementById('coinflip-result')
+                    coin: document.getElementById('coin'), button: document.getElementById('coinflip-button'), betAmount: document.getElementById('coinflip-bet-amount'), betOptions: document.querySelectorAll('#coinflip-game .bet-option'), result: document.getElementById('coinflip-result')
                 };
                 this.els.button.addEventListener('click', () => this.flip());
                 this.els.betOptions.forEach(opt => opt.addEventListener('click', () => {
+                    App.Sound.play('click');
                     if (this.state.isFlipping) return;
                     this.els.betOptions.forEach(o => o.classList.remove('selected'));
                     opt.classList.add('selected');
@@ -681,30 +807,30 @@ const App = {
                 }));
             },
             flip() {
+                App.Sound.play('click');
                 if (this.state.isFlipping || !this.state.currentBet) return alert('Wybierz stronę!');
                 const bet = parseFloat(this.els.betAmount.value);
-                if (isNaN(bet) || bet <= 0 || bet > this.parent.state.balance) return alert("Zły zakład!");
-
-                this.state.isFlipping = true;
-                this.els.button.disabled = true;
+                if (isNaN(bet) || bet <= 0 || bet > this.parent.state.balance) return alert("Zły zakład! Sprawdź saldo.");
+                App.Sound.play('flip');
+                this.state.isFlipping = true; this.els.button.disabled = true; this.els.betOptions.forEach(o => o.style.pointerEvents = 'none');
                 this.els.result.textContent = 'Rzucam...';
-                this.parent.updateBalance(-bet, false, true);
+                this.parent.updateBalance(-bet);
 
                 const outcome = Math.random() < 0.5 ? 'ct' : 't';
-                this.els.coin.className = 'coin'; // Reset
-                void this.els.coin.offsetWidth; // Trigger reflow
+                this.els.coin.className = 'coin'; void this.els.coin.offsetWidth;
                 this.els.coin.classList.add(outcome === 'ct' ? 'flipping-ct' : 'flipping-t');
                 
                 setTimeout(() => {
                     const win = outcome === this.state.currentBet;
+                    const iconClass = `fa-solid ${outcome === 'ct' ? 'fa-shield-halved' : 'fa-skull-crossbones'}`;
+                    const iconColor = `color: ${outcome === 'ct' ? '#00c3ff' : '#ffc400'}`;
                     if(win) {
-                        this.parent.updateBalance(bet * 2, true);
-                        this.els.result.innerHTML = `Wypadło <i class="fa-solid ${outcome === 'ct' ? 'fa-shield-halved' : 'fa-skull-crossbones'}"></i> - Wygrałeś!`;
+                        this.parent.updateBalance(bet * 2);
+                        this.els.result.innerHTML = `Wypadło <i class="${iconClass}" style="${iconColor}"></i> - Wygrałeś!`;
                     } else {
-                        this.els.result.innerHTML = `Wypadło <i class="fa-solid ${outcome === 'ct' ? 'fa-shield-halved' : 'fa-skull-crossbones'}"></i> - Przegrałeś.`;
+                        this.els.result.innerHTML = `Wypadło <i class="${iconClass}" style="${iconColor}"></i> - Przegrałeś.`;
                     }
-                    this.state.isFlipping = false;
-                    this.els.button.disabled = false;
+                    this.state.isFlipping = false; this.els.button.disabled = false; this.els.betOptions.forEach(o => o.style.pointerEvents = 'auto');
                 }, 1500);
             }
         },
@@ -721,46 +847,71 @@ const App = {
             document.addEventListener('keydown', e => this.handleKeyPress(e));
             this.gameLoop();
         },
-        resetGame() { /* ... bez zmian ... */ },
-        gameLoop() { /* ... bez zmian ... */ },
-        drawGame() { /* ... bez zmian ... */ },
-        drawGameOver() { /* ... bez zmian ... */ },
+        resetGame() {
+            this.state = { px: 10, py: 10, ax: 15, ay: 15, xv: 0, yv: 0, trail: [], tail: 5, score: 0, isGameOver: false, nextDirection: null };
+            this.els.score.textContent = '0';
+        },
+        gameLoop() {
+            if (this.state.isGameOver) { this.drawGameOver(); return; }
+
+            // Zastosuj zbuforowany ruch
+            if (this.state.nextDirection) {
+                const [newXv, newYv] = this.state.nextDirection;
+                // Zapobiegaj cofaniu się węża
+                if((this.state.xv !== -newXv || this.state.yv !== -newYv) && (this.state.xv !== 0 || this.state.yv !== 0 || newXv !== 0 || newYv !== 0)){
+                    this.state.xv = newXv;
+                    this.state.yv = newYv;
+                }
+                this.state.nextDirection = null;
+            }
+
+            this.state.px += this.state.xv; this.state.py += this.state.yv;
+            if (this.state.px < 0) this.state.px = this.config.tileCount - 1; if (this.state.px > this.config.tileCount - 1) this.state.px = 0;
+            if (this.state.py < 0) this.state.py = this.config.tileCount - 1; if (this.state.py > this.config.tileCount - 1) this.state.py = 0;
+
+            this.drawGame();
+            this.state.trail.forEach(t => { if(t.x === this.state.px && t.y === this.state.py) { App.Sound.play('lose'); this.state.isGameOver = true; } });
+            this.state.trail.push({x: this.state.px, y: this.state.py});
+            while(this.state.trail.length > this.state.tail) { this.state.trail.shift(); }
+
+            if(this.state.ax === this.state.px && this.state.ay === this.state.py) {
+                App.Sound.play('click');
+                this.state.tail++; this.state.score++; this.els.score.textContent = this.state.score;
+                this.state.ax = Math.floor(Math.random() * this.config.tileCount); this.state.ay = Math.floor(Math.random() * this.config.tileCount);
+            }
+            setTimeout(() => this.gameLoop(), 1000/15);
+        },
+        drawGame() {
+            const ctx = this.els.ctx; const gs = this.config.gridSize;
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark'); ctx.fillRect(0,0, this.els.canvas.width, this.els.canvas.height);
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--green-neon');
+            this.state.trail.forEach(t => { ctx.fillRect(t.x*gs, t.y*gs, gs-2, gs-2); });
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--secondary-neon'); ctx.fillRect(this.state.ax*gs, this.state.ay*gs, gs-2, gs-2);
+        },
+        drawGameOver() {
+            const ctx = this.els.ctx; ctx.fillStyle = "rgba(10, 15, 31, 0.75)";
+            ctx.fillRect(0, 0, this.els.canvas.width, this.els.canvas.height); ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--red-neon');
+            ctx.font = "40px 'Roboto Mono'"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText("GAME OVER", this.els.canvas.width/2, this.els.canvas.height/2 - 20);
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-light'); ctx.font = "20px 'Roboto Mono'";
+            ctx.fillText("Naciśnij 'R', aby zagrać ponownie", this.els.canvas.width/2, this.els.canvas.height/2 + 20);
+        },
         handleKeyPress(e) {
+            if (e.target.tagName === 'INPUT') return; // Ignore keypress if typing in an input
+            const keyMap = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] };
             if (this.state.isGameOver && (e.key === 'r' || e.key === 'R')) {
                 this.resetGame();
                 this.gameLoop();
                 return;
             }
-            // Zmiana, aby zapobiec scrollowaniu strony
-            const keyMap = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] };
             if(keyMap[e.key]) {
                 e.preventDefault();
-                const [newXv, newYv] = keyMap[e.key];
-                // Zapobiegaj cofaniu się węża
-                if(this.state.xv !== -newXv && this.state.yv !== -newYv) {
-                    this.state.xv = newXv;
-                    this.state.yv = newYv;
-                }
+                this.state.nextDirection = keyMap[e.key];
             }
         }
     }
 };
 
-// =================================================================================
-//  URUCHOMIENIE APLIKACJI
-// =================================================================================
-// Kopiuję niezmienione funkcje, żeby nie wydłużać kodu do wklejenia
-App.setupScrollAnimations = App.setupScrollAnimations.toString().includes('...') ? function() { const animatedElements = document.querySelectorAll('.animated'); const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }); }, { threshold: 0.15 }); animatedElements.forEach(el => observer.observe(el)); } : App.setupScrollAnimations;
-App.setupScrollSpy = App.setupScrollSpy.toString().includes('...') ? function() { const sections = document.querySelectorAll('section, header'); const navLinks = document.querySelectorAll('.nav-link'); const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if(entry.isIntersecting) { navLinks.forEach(link => { link.classList.remove('active'); if (link.getAttribute('href').substring(1) === entry.target.id) { link.classList.add('active'); } }); } }); }, { rootMargin: '-50% 0px -50% 0px' }); sections.forEach(section => { if (section.id) observer.observe(section); }); } : App.setupScrollSpy;
-App.Particles = App.Particles.toString().includes('...') ? {canvas: null, ctx: null, particles: [], mouse: { x: null, y: null }, config: { count: 50, speed: 0.5, radius: 2, lineColor: 'rgba(0, 242, 254, 0.2)', maxDistance: 120 }, init() { this.canvas = document.getElementById('particle-canvas'); if (!this.canvas) return; this.ctx = this.canvas.getContext('2d'); this.resizeCanvas(); this.createParticles(); this.animate(); window.addEventListener('resize', () => this.resizeCanvas()); window.addEventListener('mousemove', (e) => { this.mouse.x = e.x; this.mouse.y = e.y; }); window.addEventListener('mouseout', () => { this.mouse.x = null; this.mouse.y = null; }); }, resizeCanvas() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; this.config.count = Math.floor((this.canvas.width * this.canvas.height) / 20000); if (this.particles.length !== this.config.count) { this.createParticles(); } }, createParticles() { this.particles = []; for (let i = 0; i < this.config.count; i++) { this.particles.push({ x: Math.random() * this.canvas.width, y: Math.random() * this.canvas.height, vx: (Math.random() - 0.5) * this.config.speed, vy: (Math.random() - 0.5) * this.config.speed, }); } }, draw() { this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); this.ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-neon'); this.particles.forEach(p => { this.ctx.beginPath(); this.ctx.arc(p.x, p.y, this.config.radius, 0, Math.PI * 2); this.ctx.fill(); }); this.drawLines(); }, drawLines() { this.ctx.strokeStyle = this.config.lineColor; this.ctx.lineWidth = 1; for (let i = 0; i < this.particles.length; i++) { for (let j = i; j < this.particles.length; j++) { const dist = Math.hypot(this.particles[i].x - this.particles[j].x, this.particles[i].y - this.particles[j].y); if (dist < this.config.maxDistance) { this.ctx.beginPath(); this.ctx.moveTo(this.particles[i].x, this.particles[i].y); this.ctx.lineTo(this.particles[j].x, this.particles[j].y); this.ctx.stroke(); } } } }, update() { this.particles.forEach(p => { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1; if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1; if (this.mouse.x) { const dist = Math.hypot(this.mouse.x - p.x, this.mouse.y - p.y); if (dist < this.config.maxDistance * 1.5) { p.x -= (this.mouse.x - p.x) * 0.01; p.y -= (this.mouse.y - p.y) * 0.01; } } }); }, animate() { this.draw(); this.update(); requestAnimationFrame(() => this.animate()); }} : App.Particles;
-App.Gallery = App.Gallery.toString().includes('...') ? {els: {}, init() { this.els = { lightbox: document.getElementById('lightbox'), img: document.getElementById('lightbox-img'), title: document.getElementById('lightbox-title'), desc: document.getElementById('lightbox-desc'), closeBtn: document.getElementById('lightbox-close'), galleryItems: document.querySelectorAll('.gallery-item') }; if (!this.els.lightbox) return; this.els.galleryItems.forEach(item => { item.addEventListener('click', () => this.open(item)); }); this.els.closeBtn.addEventListener('click', () => this.close()); this.els.lightbox.addEventListener('click', (e) => { if (e.target === this.els.lightbox) this.close(); }); document.addEventListener('keydown', (e) => { if (e.key === 'Escape') this.close(); }); }, open(item) { this.els.img.src = item.querySelector('img').src; this.els.title.textContent = item.dataset.title; this.els.desc.textContent = item.dataset.desc; this.els.lightbox.classList.add('show'); }, close() { this.els.lightbox.classList.remove('show'); }} : App.Gallery;
-App.Casino.Crash.addToHistory = App.Casino.Crash.addToHistory.toString().includes('...') ? function(value) {const item = document.createElement('div'); item.className = `history-item ${value < 2 ? 'low' : 'high'}`; item.textContent = `${value.toFixed(2)}x`; this.els.historyList.prepend(item); if (this.els.historyList.children.length > 15) this.els.historyList.lastChild.remove();} : App.Casino.Crash.addToHistory;
-App.Casino.Crash.resizeCanvas = App.Casino.Crash.resizeCanvas.toString().includes('...') ? function() {this.els.canvas.width = this.els.canvas.parentElement.clientWidth; this.els.canvas.height = this.els.canvas.parentElement.clientHeight;} : App.Casino.Crash.resizeCanvas;
-App.Casino.Crash.drawGraph = App.Casino.Crash.drawGraph.toString().includes('...') ? function(multiplier, crashed = false, clear = false) { const ctx = this.els.ctx; const w = this.els.canvas.width; const h = this.els.canvas.height; ctx.clearRect(0, 0, w, h); if (clear) return; const maxMultiplier = Math.max(2, multiplier * 1.2); const scaleY = h / maxMultiplier; const scaleX = w / (Math.log(maxMultiplier) / Math.log(1.2)); ctx.strokeStyle = 'rgba(148, 163, 184, 0.1)'; ctx.lineWidth = 1; for(let i = 1; i < 5; i++) { ctx.beginPath(); ctx.moveTo(0, h - (i * h / 5)); ctx.lineTo(w, h - (i * h / 5)); ctx.moveTo(i * w / 5, 0); ctx.lineTo(i * w / 5, h); ctx.stroke(); } ctx.beginPath(); ctx.moveTo(0, h); ctx.lineWidth = 3; ctx.strokeStyle = crashed ? getComputedStyle(document.documentElement).getPropertyValue('--red-neon') : getComputedStyle(document.documentElement).getPropertyValue('--green-neon'); for(let m = 1; m <= multiplier; m += 0.05) { const x = (Math.log(m) / Math.log(1.2)) * scaleX; const y = h - (m * scaleY); ctx.lineTo(x, y); } ctx.stroke(); if (crashed) { const x = (Math.log(multiplier) / Math.log(1.2)) * scaleX; const y = h - (multiplier * scaleY); ctx.fillStyle = 'white'; ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill(); } } : App.Casino.Crash.drawGraph;
-App.SnakeGame.resetGame = App.SnakeGame.resetGame.toString().includes('...') ? function(){this.state = { px: 10, py: 10, ax: 15, ay: 15, xv: 0, yv: 0, trail: [], tail: 5, score: 0, isGameOver: false, }; this.els.score.textContent = '0';} : App.SnakeGame.resetGame;
-App.SnakeGame.gameLoop = App.SnakeGame.gameLoop.toString().includes('...') ? function(){if (this.state.isGameOver) {this.drawGameOver(); return;} this.state.px += this.state.xv; this.state.py += this.state.yv; if (this.state.px < 0) this.state.px = this.config.tileCount - 1; if (this.state.px > this.config.tileCount - 1) this.state.px = 0; if (this.state.py < 0) this.state.py = this.config.tileCount - 1; if (this.state.py > this.config.tileCount - 1) this.state.py = 0; this.drawGame(); this.state.trail.forEach(t => { if(t.x === this.state.px && t.y === this.state.py) { this.state.isGameOver = true; } }); this.state.trail.push({x: this.state.px, y: this.state.py}); while(this.state.trail.length > this.state.tail) { this.state.trail.shift(); } if(this.state.ax === this.state.px && this.state.ay === this.state.py) { this.state.tail++; this.state.score++; this.els.score.textContent = this.state.score; this.state.ax = Math.floor(Math.random() * this.config.tileCount); this.state.ay = Math.floor(Math.random() * this.config.tileCount); } setTimeout(() => this.gameLoop(), 1000/15);} : App.SnakeGame.gameLoop;
-App.SnakeGame.drawGame = App.SnakeGame.drawGame.toString().includes('...') ? function(){const ctx = this.els.ctx; const gs = this.config.gridSize; ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark'); ctx.fillRect(0,0, this.els.canvas.width, this.els.canvas.height); ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--green-neon'); this.state.trail.forEach(t => { ctx.fillRect(t.x*gs, t.y*gs, gs-2, gs-2); }); ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--secondary-neon'); ctx.fillRect(this.state.ax*gs, this.state.ay*gs, gs-2, gs-2);} : App.SnakeGame.drawGame;
-App.SnakeGame.drawGameOver = App.SnakeGame.drawGameOver.toString().includes('...') ? function(){const ctx = this.els.ctx; ctx.fillStyle = "rgba(10, 15, 31, 0.75)"; ctx.fillRect(0, 0, this.els.canvas.width, this.els.canvas.height); ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--red-neon'); ctx.font = "40px 'Roboto Mono'"; ctx.textAlign = 'center'; ctx.fillText("GAME OVER", this.els.canvas.width/2, this.els.canvas.height/2 - 20); ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-light'); ctx.font = "20px 'Roboto Mono'"; ctx.fillText("Naciśnij 'R', aby zagrać ponownie", this.els.canvas.width/2, this.els.canvas.height/2 + 20);} : App.SnakeGame.drawGameOver;
 App.init();
 
 </script>
