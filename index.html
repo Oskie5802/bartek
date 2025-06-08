@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bartek Wąsik - Kod, Ryzyko, Legenda</title>
+    <title>Bartek Wąsik - Kod, Ryzyko, Legenda 2.0</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         /* --- ZMIENNE I GLOBALNE STYLE --- */
         :root {
             --bg-dark: #0a0f1f;
             --bg-light: #161d31;
+            --bg-glass: rgba(22, 29, 49, 0.6);
             --primary-neon: #00f2fe;
             --secondary-neon: #ff00e5;
             --green-neon: #39ff14;
@@ -23,6 +24,7 @@
             --text-light: #e2e8f0;
             --text-dark: #94a3b8;
             --border-color: rgba(148, 163, 184, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,48 +36,34 @@
             color: var(--text-light);
             overflow-x: hidden;
         }
-
-        /* --- ANIMOWANE TŁO --- */
-        #animated-bg {
+        
+        /* --- NOWE: ANIMOWANE TŁO Z SIATKĄ I CZĄSTECZKAMI --- */
+        #particle-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
+            z-index: -2;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
             z-index: -1;
-            overflow: hidden;
+            animation: pan-grid 60s linear infinite;
         }
 
-        .bg-shape {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.2;
+        @keyframes pan-grid {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
         }
-
-        .shape1 {
-            width: 400px;
-            height: 400px;
-            background: var(--primary-neon);
-            animation: move1 25s infinite alternate;
-        }
-
-        .shape2 {
-            width: 300px;
-            height: 300px;
-            background: var(--secondary-neon);
-            animation: move2 30s infinite alternate;
-        }
-
-        @keyframes move1 {
-            from { transform: translate(-10vw, -20vh) rotate(0deg); }
-            to { transform: translate(80vw, 40vh) rotate(360deg); }
-        }
-        @keyframes move2 {
-            from { transform: translate(90vw, 70vh) rotate(0deg); }
-            to { transform: translate(10vw, 10vh) rotate(-360deg); }
-        }
-
 
         /* --- OGÓLNE --- */
         .section-title {
@@ -111,7 +99,7 @@
             position: relative;
         }
 
-        /* --- NAWIGACJA --- */
+        /* --- NAWIGACJA (ULEPSZONY GLASSMORPHISM) --- */
         nav {
             position: fixed;
             top: 0; left: 0; width: 100%;
@@ -119,32 +107,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(10, 15, 31, 0.6);
-            backdrop-filter: blur(12px);
+            background: var(--bg-glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             z-index: 1000;
             border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-light);
-            text-decoration: none;
-            text-shadow: 0 0 5px var(--primary-neon);
-        }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-light); text-decoration: none; text-shadow: 0 0 5px var(--primary-neon); }
         .logo span { color: var(--primary-neon); }
 
-        .nav-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            margin-left: 2.5rem;
-            font-weight: 400;
-            transition: color 0.3s ease, text-shadow 0.3s ease;
-        }
-        .nav-links a:hover {
-            color: var(--primary-neon);
-            text-shadow: 0 0 8px var(--primary-neon);
-        }
+        .nav-links a { color: var(--text-light); text-decoration: none; margin-left: 2.5rem; font-weight: 400; position: relative; transition: color 0.3s ease, text-shadow 0.3s ease; }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary-neon); transition: width 0.3s ease; }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-neon); text-shadow: 0 0 8px var(--primary-neon); }
 
         /* --- SEKCJA HERO --- */
         .hero { height: 100vh; text-align: center; }
@@ -153,104 +130,71 @@
         .subtitle .cursor { display: inline-block; background-color: var(--primary-neon); margin-left: 0.2rem; width: 4px; animation: blink 1s infinite; box-shadow: 0 0 8px var(--primary-neon); }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* --- SEKCJA UMIEJĘTNOŚCI --- */
+        /* --- SEKCJA UMIEJĘTNOŚCI (ULEPSZONY GLASSMORPHISM) --- */
         #umiejetnosci .skills-container { display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; width: 100%; }
         .skill-card {
-            background: var(--bg-light);
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 2.5rem;
             border-radius: 20px;
             border: 1px solid var(--border-color);
             flex-basis: 450px;
             flex-grow: 1;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 30px var(--shadow-color);
         }
-        .skill-card:hover { transform: translateY(-15px); }
+        .skill-card:hover { transform: translateY(-15px) scale(1.03); box-shadow: 0 20px 40px var(--shadow-color); }
         .skill-card h3 { font-size: 2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
         .skill-card.programmer h3 { color: var(--primary-neon); text-shadow: 0 0 8px var(--primary-neon); }
         .skill-card.gambler h3 { color: var(--secondary-neon); text-shadow: 0 0 8px var(--secondary-neon); }
         .skill-card ul { list-style: none; }
         .skill-card li { margin-bottom: 1.2rem; font-size: 1.1rem; color: var(--text-dark); display: flex; align-items: center; }
-        .skill-card li i { margin-right: 1rem; width: 22px; text-align: center; transition: transform 0.3s; }
-        .skill-card li:hover i { transform: scale(1.3) rotate(-10deg); }
+        .skill-card li i { margin-right: 1rem; width: 22px; text-align: center; transition: transform 0.3s, text-shadow 0.3s; }
+        .skill-card li:hover i { transform: scale(1.4) rotate(-10deg); text-shadow: 0 0 10px currentColor; }
         .skill-card.programmer li i { color: var(--primary-neon); }
         .skill-card.gambler li i { color: var(--secondary-neon); }
 
-        /* --- SEKCJA SYMULATOR KRACHA --- */
+        /* --- SEKCJA SYMULATOR KRACHA 2.0 --- */
         #symulator { gap: 2rem; }
-        .crash-simulator {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-            width: 100%;
-            max-width: 900px;
-        }
-        .crash-main {
-            display: flex;
-            gap: 2rem;
-            width: 100%;
-            flex-wrap: wrap;
-        }
-
+        .crash-simulator { display: flex; flex-direction: column; align-items: center; gap: 2rem; width: 100%; max-width: 900px; }
+        .crash-main { display: flex; gap: 2rem; width: 100%; flex-wrap: wrap; }
+        
         .crash-graph-container {
             flex: 2;
             min-width: 300px;
             background: var(--bg-light);
             border-radius: 20px;
             border: 1px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 350px;
             position: relative;
             overflow: hidden;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
         }
-        
+        #crash-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
         .crash-multiplier {
             font-family: 'Roboto Mono', monospace;
             font-size: 5rem;
             font-weight: 700;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
             transition: color 0.5s ease, text-shadow 0.5s ease;
             z-index: 2;
         }
         .crash-multiplier.color-green { color: var(--green-neon); text-shadow: 0 0 15px var(--green-neon); }
         .crash-multiplier.color-red { color: var(--red-neon); text-shadow: 0 0 15px var(--red-neon); }
 
-        .crash-controls {
-            flex: 1;
-            min-width: 250px;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            background: var(--bg-light);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-        }
+        .crash-controls { flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 1.5rem; background: var(--bg-glass); border-radius: 20px; border: 1px solid var(--border-color); padding: 2rem; }
         .crash-controls label { font-size: 1rem; color: var(--text-dark); margin-bottom: 0.5rem; }
-        .crash-controls input {
-            width: 100%;
-            padding: 0.8rem;
-            background: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: var(--text-light);
-            font-size: 1.2rem;
-            font-family: 'Roboto Mono';
-        }
+        .crash-controls input { width: 100%; padding: 0.8rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-light); font-size: 1.2rem; font-family: 'Roboto Mono'; }
         .crash-controls input:focus { outline: none; border-color: var(--primary-neon); box-shadow: 0 0 10px var(--primary-neon); }
 
-        #crash-button {
-            padding: 1rem;
-            font-size: 1.2rem;
-            font-weight: 700;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        #crash-button { padding: 1rem; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; }
         #crash-button.start { background: var(--primary-neon); color: var(--bg-dark); }
         #crash-button.start:hover { box-shadow: 0 0 15px var(--primary-neon); }
         #crash-button.cashout { background: var(--green-neon); color: var(--bg-dark); }
@@ -260,35 +204,47 @@
         .balance-display { text-align: center; }
         .balance-display span { font-size: 2rem; color: var(--green-neon); font-family: 'Roboto Mono'; text-shadow: 0 0 8px var(--green-neon); }
 
-        .crash-history {
-            width: 100%;
-            background: var(--bg-light);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-        }
+        .crash-history { width: 100%; background: var(--bg-glass); border-radius: 20px; border: 1px solid var(--border-color); padding: 1.5rem; }
         .crash-history h4 { text-align: center; margin-bottom: 1rem; color: var(--text-dark); font-weight: 400; }
-        .history-list {
+        .history-list { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 10px; }
+        .history-item { font-family: 'Roboto Mono'; padding: 0.5rem 1rem; border-radius: 8px; flex-shrink: 0; font-weight: 700; background: rgba(0,0,0,0.2); }
+        .history-item.low { color: var(--red-neon); border: 1px solid var(--red-neon); }
+        .history-item.high { color: var(--green-neon); border: 1px solid var(--green-neon); }
+
+        /* --- NOWA SEKCJA: SNAKE --- */
+        #gra .game-container {
             display: flex;
-            gap: 1rem;
-            overflow-x: auto;
-            padding-bottom: 10px;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px var(--shadow-color);
         }
-        .history-item {
-            font-family: 'Roboto Mono';
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            flex-shrink: 0;
+        #snake-canvas {
+            background-color: var(--bg-dark);
+            border: 2px solid var(--primary-neon);
+            box-shadow: 0 0 15px var(--primary-neon);
+            border-radius: 10px;
+        }
+        .game-info {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            text-align: center;
+        }
+        .game-info span {
+            color: var(--secondary-neon);
             font-weight: 700;
-            background: rgba(0,0,0,0.2);
+            text-shadow: 0 0 8px var(--secondary-neon);
         }
-        .history-item.low { color: var(--red-neon); }
-        .history-item.high { color: var(--green-neon); }
 
-
-        /* --- GALERIA & KONTAKT --- */
+        /* --- GALERIA & NOWY LIGHTBOX --- */
         #galeria .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; width: 100%; max-width: 1200px; }
-        .gallery-item { background-color: var(--bg-light); border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border-color); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+        .gallery-item { background-color: var(--bg-light); border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border-color); box-shadow: 0 8px 30px var(--shadow-color); transition: box-shadow 0.4s ease; }
+        .gallery-item:hover { box-shadow: 0 0 20px var(--primary-neon); }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
         .gallery-item:hover img { transform: scale(1.1); }
         .gallery-item .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(10, 15, 31, 0.95), transparent); color: white; padding: 2rem 1rem 1rem; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; }
@@ -296,6 +252,54 @@
         .overlay h4 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--primary-neon); }
         .overlay p { font-size: 0.9rem; color: var(--text-dark); }
         
+        #lightbox {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        #lightbox.show { opacity: 1; visibility: visible; }
+        #lightbox .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            transform: scale(0.8);
+            transition: transform 0.4s ease;
+        }
+        #lightbox.show .lightbox-content { transform: scale(1); }
+        #lightbox img {
+            max-width: 100%; max-height: 80vh;
+            border-radius: 10px;
+            box-shadow: 0 0 30px var(--primary-neon);
+        }
+        #lightbox .lightbox-caption {
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 1rem;
+        }
+        #lightbox .lightbox-caption h4 { color: var(--primary-neon); }
+        #lightbox .lightbox-caption p { color: var(--text-dark); }
+        #lightbox-close {
+            position: absolute;
+            top: -15px; right: -15px;
+            font-size: 2rem; color: white;
+            cursor: pointer;
+            background: var(--bg-dark);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- KONTAKT --- */
         #kontakt p { font-size: 1.2rem; color: var(--text-dark); margin-bottom: 3rem; max-width: 600px; text-align: center; }
         .social-links a { color: var(--text-dark); font-size: 3rem; margin: 0 1.5rem; transition: all 0.3s ease; }
         .social-links a:hover { transform: translateY(-8px) scale(1.1); }
@@ -325,23 +329,20 @@
     </style>
 </head>
 <body>
-
-    <div id="animated-bg">
-        <div class="bg-shape shape1"></div>
-        <div class="bg-shape shape2"></div>
-    </div>
+    <canvas id="particle-canvas"></canvas>
 
     <nav>
         <a href="#" class="logo">Bartek<span>.dev</span></a>
         <div class="nav-links">
-            <a href="#umiejetnosci">Specjalizacje</a>
-            <a href="#symulator">Symulator</a>
-            <a href="#galeria">Galeria</a>
-            <a href="#kontakt">Kontakt</a>
+            <a href="#umiejetnosci" class="nav-link">Specjalizacje</a>
+            <a href="#symulator" class="nav-link">Symulator</a>
+            <a href="#gra" class="nav-link">Gra</a>
+            <a href="#galeria" class="nav-link">Galeria</a>
+            <a href="#kontakt" class="nav-link">Kontakt</a>
         </div>
     </nav>
 
-    <header class="hero">
+    <header class="hero" id="hero">
         <div class="hero-content">
             <h1>Bartek Wąsik</h1>
             <div class="subtitle"><span id="typing-text"></span><span class="cursor"></span></div>
@@ -376,10 +377,11 @@
         </section>
         
         <section id="symulator">
-            <h2 class="section-title animated fade-in">Poczuj Dreszczyk Emocji</h2>
+            <h2 class="section-title animated fade-in">Poczuj Dreszczyk Emocji 2.0</h2>
             <div class="crash-simulator">
                 <div class="crash-main">
                     <div class="crash-graph-container animated fade-in">
+                        <canvas id="crash-canvas"></canvas>
                         <div id="crash-multiplier" class="crash-multiplier">1.00x</div>
                     </div>
                     <div class="crash-controls animated slide-in-right">
@@ -396,8 +398,18 @@
                 </div>
                 <div class="crash-history animated fade-in" style="transition-delay: 0.2s;">
                     <h4>Historia Krachów</h4>
-                    <div id="history-list" class="history-list">
-                    </div>
+                    <div id="history-list" class="history-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gra">
+            <h2 class="section-title animated fade-in">Chwila Przerwy</h2>
+            <div class="game-container animated fade-in">
+                <canvas id="snake-canvas" width="480" height="480"></canvas>
+                <div class="game-info">
+                    <p>Sterowanie: Klawisze strzałek</p>
+                    <p>Wynik: <span id="snake-score">0</span></p>
                 </div>
             </div>
         </section>
@@ -405,15 +417,15 @@
         <section id="galeria">
              <h2 class="section-title animated fade-in">Galeria Sukcesów</h2>
              <div class="gallery-grid">
-                <div class="gallery-item animated fade-in">
+                <div class="gallery-item animated fade-in" data-title="Hello, World!" data-desc="Każda legenda ma swój początek.">
                     <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=1170&q=80" alt="Kod">
                     <div class="overlay"><h4>Hello, World!</h4><p>Każda legenda ma swój początek.</p></div>
                 </div>
-                <div class="gallery-item animated fade-in" style="transition-delay: 0.1s;">
+                <div class="gallery-item animated fade-in" style="transition-delay: 0.1s;" data-title="Legendarny Drop" data-desc="Ten jeden raz, gdy G4Skins okazał łaskę. Pamiętamy!">
                     <img src="https://images.unsplash.com/photo-1616440339993-9c8651a5a8e0?auto=format&fit=crop&w=1170&q=80" alt="Neonowa grafika">
                     <div class="overlay"><h4>Legendarny Drop</h4><p>Ten jeden raz, gdy G4Skins okazał łaskę. Pamiętamy!</p></div>
                 </div>
-                <div class="gallery-item animated fade-in" style="transition-delay: 0.2s;">
+                <div class="gallery-item animated fade-in" style="transition-delay: 0.2s;" data-title="Centrum Dowodzenia" data-desc="Miejsce, gdzie powstaje kod i znikają pieniądze.">
                     <img src="https://images.unsplash.com/photo-1598550487032-1ce27a8a0614?auto=format&fit=crop&w=1074&q=80" alt="Stanowisko komputerowe">
                     <div class="overlay"><h4>Centrum Dowodzenia</h4><p>Miejsce, gdzie powstaje kod i znikają pieniądze.</p></div>
                 </div>
@@ -433,187 +445,541 @@
         </section>
     </main>
 
+    <div id="lightbox">
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="Powiększone zdjęcie z galerii">
+            <div id="lightbox-caption" class="lightbox-caption">
+                <h4 id="lightbox-title"></h4>
+                <p id="lightbox-desc"></p>
+            </div>
+            <div id="lightbox-close">&times;</div>
+        </div>
+    </div>
+
     <footer>
-        <p>&copy; 2023 Stworzone z humorem dla Bartka. Powodzenia na obu frontach!</p>
+        <p>&copy; 2024 Stworzone z pasją dla Bartka. Powodzenia na obu frontach, Legendo!</p>
     </footer>
 
 <script>
-// --- EFEKT PISANIA NA MASZYNIE ---
-const typingText = document.getElementById('typing-text');
-const phrases = ["Przyszły Programista", "Mistrz G4Skins", "Legenda Klawiatury", "Hazardowy Król"];
-let phraseIndex = 0, charIndex = 0, isDeleting = false;
+// =================================================================================
+//  APLIKACJA GŁÓWNA - ZORGANIZOWANA STRUKTURA KODU
+// =================================================================================
+const App = {
+    // --- Inicjalizacja wszystkich modułów ---
+    init() {
+        // Czekamy na załadowanie DOM, aby mieć pewność, że wszystkie elementy są dostępne
+        document.addEventListener('DOMContentLoaded', () => {
+            this.setupTypingEffect();
+            this.setupScrollAnimations();
+            this.setupScrollSpy();
+            this.CrashSimulator.init();
+            this.SnakeGame.init();
+            this.Gallery.init();
+            this.Particles.init();
+        });
+    },
 
-function type() {
-    const currentPhrase = phrases[phraseIndex];
-    let typeSpeed = 150;
-    if (isDeleting) {
-        typingText.textContent = currentPhrase.substring(0, charIndex-- - 1);
-    } else {
-        typingText.textContent = currentPhrase.substring(0, charIndex++ + 1);
-    }
-    if (!isDeleting && charIndex === currentPhrase.length) {
-        typeSpeed = 2000; isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
-        isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; typeSpeed = 500;
-    } else if (isDeleting) { typeSpeed = 75; }
-    setTimeout(type, typeSpeed);
-}
+    // --- Efekt pisania na maszynie ---
+    setupTypingEffect() {
+        const typingText = document.getElementById('typing-text');
+        if (!typingText) return;
+        const phrases = ["Przyszły Programista", "Mistrz G4Skins", "Legenda Klawiatury", "Hazardowy Król"];
+        let phraseIndex = 0, charIndex = 0, isDeleting = false;
 
-// --- ANIMACJE NA SCROLL ---
-const animatedElements = document.querySelectorAll('.animated');
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+            let typeSpeed = 150;
+            if (isDeleting) {
+                typingText.textContent = currentPhrase.substring(0, charIndex-- - 1);
+            } else {
+                typingText.textContent = currentPhrase.substring(0, charIndex++ + 1);
+            }
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                typeSpeed = 2000; isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; typeSpeed = 500;
+            } else if (isDeleting) { typeSpeed = 75; }
+            setTimeout(type, typeSpeed);
         }
-    });
-}, { threshold: 0.15 });
+        type();
+    },
 
-animatedElements.forEach(el => observer.observe(el));
+    // --- Animacje na scroll ---
+    setupScrollAnimations() {
+        const animatedElements = document.querySelectorAll('.animated');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        animatedElements.forEach(el => observer.observe(el));
+    },
 
+    // --- Inteligentna nawigacja (Scroll Spy) ---
+    setupScrollSpy() {
+        const sections = document.querySelectorAll('section, header');
+        const navLinks = document.querySelectorAll('.nav-link');
 
-// --- SYMULATOR KRACHA ---
-const balanceEl = document.getElementById('balance');
-const betAmountEl = document.getElementById('bet-amount');
-const crashButton = document.getElementById('crash-button');
-const multiplierEl = document.getElementById('crash-multiplier');
-const historyListEl = document.getElementById('history-list');
-
-let balance = 1000.00;
-let isGameRunning = false;
-let gameInterval;
-let multiplier;
-
-function updateBalanceDisplay() {
-    balanceEl.innerText = balance.toFixed(2);
-}
-
-function addToHistory(value) {
-    const item = document.createElement('div');
-    item.classList.add('history-item');
-    item.textContent = `${value.toFixed(2)}x`;
-    if (value < 2) {
-        item.classList.add('low');
-    } else {
-        item.classList.add('high');
-    }
-    historyListEl.prepend(item);
-    if (historyListEl.children.length > 10) {
-        historyListEl.lastChild.remove();
-    }
-}
-
-function resetGameUI() {
-    crashButton.disabled = false;
-    betAmountEl.disabled = false;
-    crashButton.className = 'start';
-    crashButton.textContent = 'ZACZNIJ GRĘ';
-    multiplierEl.classList.remove('color-green', 'color-red');
-}
-
-function endGame(crashedAt, didWin = false) {
-    isGameRunning = false;
-    clearInterval(gameInterval);
-
-    multiplierEl.textContent = `${crashedAt.toFixed(2)}x`;
-    multiplierEl.classList.add('color-red');
-    addToHistory(crashedAt);
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { rootMargin: '-50% 0px -50% 0px' });
+        
+        sections.forEach(section => {
+            if (section.id) observer.observe(section);
+        });
+    },
     
-    if(didWin) {
-        const winnings = parseFloat(betAmountEl.value) * multiplier;
-        balance += winnings;
-        updateBalanceDisplay();
-    }
-    
-    setTimeout(resetGameUI, 2000);
-}
+    // --- Tło z cząsteczkami ---
+    Particles: {
+        canvas: null, ctx: null, particles: [], mouse: { x: null, y: null },
+        config: { count: 50, speed: 0.5, radius: 2, lineColor: 'rgba(0, 242, 254, 0.2)', maxDistance: 120 },
 
-function startGame() {
-    const bet = parseFloat(betAmountEl.value);
-    if (isNaN(bet) || bet <= 0 || bet > balance) {
-        alert("Nieprawidłowa kwota zakładu lub brak środków!");
-        return;
-    }
-    
-    balance -= bet;
-    updateBalanceDisplay();
-    
-    isGameRunning = true;
-    multiplier = 1.00;
-    
-    crashButton.disabled = false;
-    betAmountEl.disabled = true;
-    crashButton.className = 'cashout';
-    crashButton.textContent = 'WYPŁAĆ!';
-    multiplierEl.textContent = '1.00x';
-    multiplierEl.classList.remove('color-green', 'color-red');
+        init() {
+            this.canvas = document.getElementById('particle-canvas');
+            if (!this.canvas) return;
+            this.ctx = this.canvas.getContext('2d');
+            this.resizeCanvas();
+            this.createParticles();
+            this.animate();
 
-    // Generowanie punktu krachu - rzadziej wysokie wartości
-    const random = Math.random();
-    const crashPoint = 1 / (1 - random);
+            window.addEventListener('resize', () => this.resizeCanvas());
+            window.addEventListener('mousemove', (e) => {
+                this.mouse.x = e.x;
+                this.mouse.y = e.y;
+            });
+            window.addEventListener('mouseout', () => {
+                this.mouse.x = null;
+                this.mouse.y = null;
+            });
+        },
 
-    gameInterval = setInterval(() => {
-        multiplier += 0.01 + (multiplier * 0.01); // Przyspiesza z czasem
-        multiplierEl.textContent = `${multiplier.toFixed(2)}x`;
-        crashButton.textContent = `WYPŁAĆ ${(bet * multiplier).toFixed(2)}`;
+        resizeCanvas() {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+            this.config.count = Math.floor((this.canvas.width * this.canvas.height) / 20000);
+            if (this.particles.length !== this.config.count) {
+                this.createParticles();
+            }
+        },
 
-        if (multiplier >= 2.0) {
-            multiplierEl.classList.add('color-green');
+        createParticles() {
+            this.particles = [];
+            for (let i = 0; i < this.config.count; i++) {
+                this.particles.push({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    vx: (Math.random() - 0.5) * this.config.speed,
+                    vy: (Math.random() - 0.5) * this.config.speed,
+                });
+            }
+        },
+
+        draw() {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-neon');
+            
+            this.particles.forEach(p => {
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, this.config.radius, 0, Math.PI * 2);
+                this.ctx.fill();
+            });
+            this.drawLines();
+        },
+        
+        drawLines() {
+            this.ctx.strokeStyle = this.config.lineColor;
+            this.ctx.lineWidth = 1;
+            for (let i = 0; i < this.particles.length; i++) {
+                for (let j = i; j < this.particles.length; j++) {
+                    const dist = Math.hypot(this.particles[i].x - this.particles[j].x, this.particles[i].y - this.particles[j].y);
+                    if (dist < this.config.maxDistance) {
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+                        this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+                        this.ctx.stroke();
+                    }
+                }
+            }
+        },
+
+        update() {
+            this.particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+
+                if (this.mouse.x) {
+                    const dist = Math.hypot(this.mouse.x - p.x, this.mouse.y - p.y);
+                    if (dist < this.config.maxDistance * 1.5) {
+                        p.x -= (this.mouse.x - p.x) * 0.01;
+                        p.y -= (this.mouse.y - p.y) * 0.01;
+                    }
+                }
+            });
+        },
+
+        animate() {
+            this.draw();
+            this.update();
+            requestAnimationFrame(() => this.animate());
         }
+    },
 
-        if (multiplier >= crashPoint) {
-            crashButton.disabled = true;
-            endGame(crashPoint, false);
+    // --- Moduł symulatora krachu ---
+    CrashSimulator: {
+        els: {},
+        state: { balance: 1000.00, isGameRunning: false, multiplier: 1.0, animationFrameId: null },
+        
+        init() {
+            this.els = {
+                balance: document.getElementById('balance'),
+                betAmount: document.getElementById('bet-amount'),
+                crashButton: document.getElementById('crash-button'),
+                multiplier: document.getElementById('crash-multiplier'),
+                historyList: document.getElementById('history-list'),
+                canvas: document.getElementById('crash-canvas'),
+            };
+            if (!this.els.canvas) return;
+            this.els.ctx = this.els.canvas.getContext('2d');
+            this.els.crashButton.addEventListener('click', () => this.handleButtonClick());
+            this.updateBalanceDisplay();
+            for(let i=0; i<5; i++) this.addToHistory(1 + Math.random() * 4);
+            this.resizeCanvas();
+            window.addEventListener('resize', () => this.resizeCanvas());
+        },
+        
+        resizeCanvas() {
+            this.els.canvas.width = this.els.canvas.parentElement.clientWidth;
+            this.els.canvas.height = this.els.canvas.parentElement.clientHeight;
+        },
+
+        handleButtonClick() {
+            this.state.isGameRunning ? this.cashOut() : this.startGame();
+        },
+        
+        updateBalanceDisplay() { this.els.balance.innerText = this.state.balance.toFixed(2); },
+
+        addToHistory(value) {
+            const item = document.createElement('div');
+            item.className = `history-item ${value < 2 ? 'low' : 'high'}`;
+            item.textContent = `${value.toFixed(2)}x`;
+            this.els.historyList.prepend(item);
+            if (this.els.historyList.children.length > 15) this.els.historyList.lastChild.remove();
+        },
+
+        resetGameUI() {
+            this.els.crashButton.disabled = false;
+            this.els.betAmount.disabled = false;
+            this.els.crashButton.className = 'start';
+            this.els.crashButton.textContent = 'ZACZNIJ GRĘ';
+            this.els.multiplier.classList.remove('color-green', 'color-red');
+            setTimeout(() => this.drawGraph(1, false, true), 1000); // Clear graph after a delay
+        },
+        
+        endGame(crashedAt, didWin = false) {
+            this.state.isGameRunning = false;
+            cancelAnimationFrame(this.state.animationFrameId);
+
+            this.drawGraph(crashedAt, true);
+            this.els.multiplier.textContent = `${crashedAt.toFixed(2)}x`;
+            this.els.multiplier.classList.add('color-red');
+            this.addToHistory(crashedAt);
+            
+            if(didWin) {
+                const winnings = parseFloat(this.els.betAmount.value) * this.state.multiplier;
+                this.state.balance += winnings;
+                this.updateBalanceDisplay();
+            }
+            
+            setTimeout(() => this.resetGameUI(), 2000);
+        },
+
+        startGame() {
+            const bet = parseFloat(this.els.betAmount.value);
+            if (isNaN(bet) || bet <= 0 || bet > this.state.balance) {
+                alert("Nieprawidłowa kwota zakładu lub brak środków!");
+                return;
+            }
+            
+            this.state.balance -= bet;
+            this.updateBalanceDisplay();
+            
+            this.state.isGameRunning = true;
+            this.state.multiplier = 1.00;
+            this.state.crashPoint = 1 / (1 - Math.random());
+            
+            this.els.crashButton.disabled = false;
+            this.els.betAmount.disabled = true;
+            this.els.crashButton.className = 'cashout';
+            this.els.multiplier.classList.remove('color-green', 'color-red');
+
+            const gameLoop = () => {
+                this.state.multiplier += 0.01 + (this.state.multiplier * 0.005);
+                this.els.multiplier.textContent = `${this.state.multiplier.toFixed(2)}x`;
+                this.els.crashButton.textContent = `WYPŁAĆ ${(bet * this.state.multiplier).toFixed(2)}`;
+                this.drawGraph(this.state.multiplier);
+                
+                if (this.state.multiplier >= 2.0) this.els.multiplier.classList.add('color-green');
+                if (this.state.multiplier >= this.state.crashPoint) {
+                    this.els.crashButton.disabled = true;
+                    this.endGame(this.state.crashPoint, false);
+                } else {
+                    this.state.animationFrameId = requestAnimationFrame(gameLoop);
+                }
+            };
+            this.state.animationFrameId = requestAnimationFrame(gameLoop);
+        },
+
+        cashOut() {
+            this.els.crashButton.disabled = true;
+            cancelAnimationFrame(this.state.animationFrameId);
+            this.state.isGameRunning = false;
+            
+            const winnings = parseFloat(this.els.betAmount.value) * this.state.multiplier;
+            this.state.balance += winnings;
+            this.updateBalanceDisplay();
+            
+            this.els.multiplier.classList.add('color-green');
+            this.addToHistory(this.state.multiplier);
+            
+            setTimeout(() => this.resetGameUI(), 2000);
+        },
+        
+        drawGraph(multiplier, crashed = false, clear = false) {
+            const ctx = this.els.ctx;
+            const w = this.els.canvas.width;
+            const h = this.els.canvas.height;
+            ctx.clearRect(0, 0, w, h);
+
+            if (clear) return;
+
+            const maxMultiplier = Math.max(2, multiplier * 1.2);
+            const scaleY = h / maxMultiplier;
+            const scaleX = w / (Math.log(maxMultiplier) / Math.log(1.2));
+
+            // Draw grid
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.1)';
+            ctx.lineWidth = 1;
+            for(let i = 1; i < 5; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, h - (i * h / 5));
+                ctx.lineTo(w, h - (i * h / 5));
+                ctx.moveTo(i * w / 5, 0);
+                ctx.lineTo(i * w / 5, h);
+                ctx.stroke();
+            }
+
+            // Draw curve
+            ctx.beginPath();
+            ctx.moveTo(0, h);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = crashed ? getComputedStyle(document.documentElement).getPropertyValue('--red-neon') : getComputedStyle(document.documentElement).getPropertyValue('--green-neon');
+            
+            for(let m = 1; m <= multiplier; m += 0.05) {
+                const x = (Math.log(m) / Math.log(1.2)) * scaleX;
+                const y = h - (m * scaleY);
+                ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Draw crash point
+            if (crashed) {
+                const x = (Math.log(multiplier) / Math.log(1.2)) * scaleX;
+                const y = h - (multiplier * scaleY);
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
-    }, 50);
-}
+    },
+    
+    // --- Moduł gry Snake ---
+    SnakeGame: {
+        els: {},
+        config: { gridSize: 24, tileCount: 20 },
+        state: {},
 
-function cashOut() {
-    crashButton.disabled = true;
-    clearInterval(gameInterval);
-    isGameRunning = false;
-    
-    const winnings = parseFloat(betAmountEl.value) * multiplier;
-    balance += winnings;
-    updateBalanceDisplay();
-    
-    multiplierEl.classList.add('color-green');
-    // Czekamy na "oficjalny" krach, ale już wygraliśmy
-    // To symuluje zachowanie prawdziwych gier
-    // W tle gra toczy się dalej aż do krachu
-    const random = Math.random();
-    const crashPoint = multiplier + (1 / (1 - random));
-    
-    gameInterval = setInterval(() => {
-        const visualMultiplier = parseFloat(multiplierEl.textContent) + 0.1;
-        if (visualMultiplier >= crashPoint) {
-            clearInterval(gameInterval);
-            addToHistory(crashPoint);
-            setTimeout(resetGameUI, 2000);
-        } else {
-            multiplierEl.textContent = `${visualMultiplier.toFixed(2)}x`;
+        init() {
+            this.els = {
+                canvas: document.getElementById('snake-canvas'),
+                score: document.getElementById('snake-score'),
+            };
+            if (!this.els.canvas) return;
+            this.els.ctx = this.els.canvas.getContext('2d');
+            
+            this.resetGame();
+            document.addEventListener('keydown', e => this.handleKeyPress(e));
+            this.gameLoop();
+        },
+        
+        resetGame() {
+            this.state = {
+                px: 10, py: 10, // player position
+                ax: 15, ay: 15, // apple position
+                xv: 0, yv: 0,   // velocity
+                trail: [],
+                tail: 5,
+                score: 0,
+                isGameOver: false,
+            };
+            this.els.score.textContent = '0';
+        },
+        
+        gameLoop() {
+            if (this.state.isGameOver) {
+                this.drawGameOver();
+                return;
+            }
+            
+            this.state.px += this.state.xv;
+            this.state.py += this.state.yv;
+
+            if (this.state.px < 0) this.state.px = this.config.tileCount - 1;
+            if (this.state.px > this.config.tileCount - 1) this.state.px = 0;
+            if (this.state.py < 0) this.state.py = this.config.tileCount - 1;
+            if (this.state.py > this.config.tileCount - 1) this.state.py = 0;
+
+            this.drawGame();
+
+            this.state.trail.forEach(t => {
+                if(t.x === this.state.px && t.y === this.state.py) {
+                   this.state.isGameOver = true;
+                }
+            });
+
+            this.state.trail.push({x: this.state.px, y: this.state.py});
+            while(this.state.trail.length > this.state.tail) {
+                this.state.trail.shift();
+            }
+
+            if(this.state.ax === this.state.px && this.state.ay === this.state.py) {
+                this.state.tail++;
+                this.state.score++;
+                this.els.score.textContent = this.state.score;
+                this.state.ax = Math.floor(Math.random() * this.config.tileCount);
+                this.state.ay = Math.floor(Math.random() * this.config.tileCount);
+            }
+            
+            setTimeout(() => this.gameLoop(), 1000/15);
+        },
+        
+        drawGame() {
+            const ctx = this.els.ctx;
+            const gs = this.config.gridSize;
+            
+            // Background
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark');
+            ctx.fillRect(0,0, this.els.canvas.width, this.els.canvas.height);
+
+            // Snake
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--green-neon');
+            this.state.trail.forEach(t => {
+                ctx.fillRect(t.x*gs, t.y*gs, gs-2, gs-2);
+            });
+
+            // Apple
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--secondary-neon');
+            ctx.fillRect(this.state.ax*gs, this.state.ay*gs, gs-2, gs-2);
+        },
+
+        drawGameOver() {
+            const ctx = this.els.ctx;
+            ctx.fillStyle = "rgba(10, 15, 31, 0.75)";
+            ctx.fillRect(0, 0, this.els.canvas.width, this.els.canvas.height);
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--red-neon');
+            ctx.font = "40px 'Roboto Mono'";
+            ctx.textAlign = 'center';
+            ctx.fillText("GAME OVER", this.els.canvas.width/2, this.els.canvas.height/2 - 20);
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-light');
+            ctx.font = "20px 'Roboto Mono'";
+            ctx.fillText("Naciśnij spację, aby zagrać ponownie", this.els.canvas.width/2, this.els.canvas.height/2 + 20);
+        },
+
+        handleKeyPress(e) {
+            if (this.state.isGameOver && e.keyCode === 32) { // Space
+                this.resetGame();
+                this.gameLoop();
+                return;
+            }
+
+            switch(e.keyCode) {
+                case 37: // Left
+                    if (this.state.xv !== 1) { this.state.xv = -1; this.state.yv = 0; }
+                    break;
+                case 38: // Up
+                    if (this.state.yv !== 1) { this.state.xv = 0; this.state.yv = -1; }
+                    break;
+                case 39: // Right
+                    if (this.state.xv !== -1) { this.state.xv = 1; this.state.yv = 0; }
+                    break;
+                case 40: // Down
+                    if (this.state.yv !== -1) { this.state.xv = 0; this.state.yv = 1; }
+                    break;
+            }
         }
-    }, 50);
-}
+    },
+    
+    // --- Moduł Galerii z Lightboxem ---
+    Gallery: {
+        els: {},
+        
+        init() {
+            this.els = {
+                lightbox: document.getElementById('lightbox'),
+                img: document.getElementById('lightbox-img'),
+                title: document.getElementById('lightbox-title'),
+                desc: document.getElementById('lightbox-desc'),
+                closeBtn: document.getElementById('lightbox-close'),
+                galleryItems: document.querySelectorAll('.gallery-item')
+            };
 
-crashButton.addEventListener('click', () => {
-    if (isGameRunning) {
-        cashOut();
-    } else {
-        startGame();
-    }
-});
+            if (!this.els.lightbox) return;
 
-// INICJALIZACJA STRONY
-document.addEventListener('DOMContentLoaded', () => {
-    type();
-    updateBalanceDisplay();
-    // Dodaj kilka początkowych wartości do historii
-    for(let i=0; i<5; i++) {
-        addToHistory(1 + Math.random() * 4);
+            this.els.galleryItems.forEach(item => {
+                item.addEventListener('click', () => this.open(item));
+            });
+
+            this.els.closeBtn.addEventListener('click', () => this.close());
+            this.els.lightbox.addEventListener('click', (e) => {
+                if (e.target === this.els.lightbox) this.close();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') this.close();
+            });
+        },
+
+        open(item) {
+            this.els.img.src = item.querySelector('img').src;
+            this.els.title.textContent = item.dataset.title;
+            this.els.desc.textContent = item.dataset.desc;
+            this.els.lightbox.classList.add('show');
+        },
+
+        close() {
+            this.els.lightbox.classList.remove('show');
+        }
     }
-});
+};
+
+// =================================================================================
+//  URUCHOMIENIE APLIKACJI
+// =================================================================================
+App.init();
 
 </script>
 </body>
