@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bartek Wąsik - Kod, Ryzyko, Legenda</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        /* --- ZMIENNE I GLOBALNE STYLE --- */
+        :root {
+            --bg-dark: #0a0f1f;
+            --bg-light: #161d31;
+            --primary-neon: #00f2fe;
+            --secondary-neon: #ff00e5;
+            --green-neon: #39ff14;
+            --red-neon: #ff1f4f;
+            --text-light: #e2e8f0;
+            --text-dark: #94a3b8;
+            --border-color: rgba(148, 163, 184, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* --- ANIMOWANE TŁO --- */
+        #animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.2;
+        }
+
+        .shape1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-neon);
+            animation: move1 25s infinite alternate;
+        }
+
+        .shape2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary-neon);
+            animation: move2 30s infinite alternate;
+        }
+
+        @keyframes move1 {
+            from { transform: translate(-10vw, -20vh) rotate(0deg); }
+            to { transform: translate(80vw, 40vh) rotate(360deg); }
+        }
+        @keyframes move2 {
+            from { transform: translate(90vw, 70vh) rotate(0deg); }
+            to { transform: translate(10vw, 10vh) rotate(-360deg); }
+        }
+
+
+        /* --- OGÓLNE --- */
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3.5rem;
+            position: relative;
+            color: var(--text-light);
+            text-shadow: 0 0 8px var(--primary-neon), 0 0 12px var(--primary-neon);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon));
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--primary-neon), 0 0 10px var(--secondary-neon);
+        }
+
+        section {
+            padding: 7rem 5%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* --- NAWIGACJA --- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 15, 31, 0.6);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-decoration: none;
+            text-shadow: 0 0 5px var(--primary-neon);
+        }
+        .logo span { color: var(--primary-neon); }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin-left: 2.5rem;
+            font-weight: 400;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: var(--primary-neon);
+            text-shadow: 0 0 8px var(--primary-neon);
+        }
+
+        /* --- SEKCJA HERO --- */
+        .hero { height: 100vh; text-align: center; }
+        .hero-content h1 { font-size: 4.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .hero-content .subtitle { font-size: 2rem; font-weight: 400; color: var(--primary-neon); font-family: 'Roboto Mono', monospace; min-height: 2.8rem; text-shadow: 0 0 8px var(--primary-neon); }
+        .subtitle .cursor { display: inline-block; background-color: var(--primary-neon); margin-left: 0.2rem; width: 4px; animation: blink 1s infinite; box-shadow: 0 0 8px var(--primary-neon); }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- SEKCJA UMIEJĘTNOŚCI --- */
+        #umiejetnosci .skills-container { display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; width: 100%; }
+        .skill-card {
+            background: var(--bg-light);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            flex-basis: 450px;
+            flex-grow: 1;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .skill-card:hover { transform: translateY(-15px); }
+        .skill-card h3 { font-size: 2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+        .skill-card.programmer h3 { color: var(--primary-neon); text-shadow: 0 0 8px var(--primary-neon); }
+        .skill-card.gambler h3 { color: var(--secondary-neon); text-shadow: 0 0 8px var(--secondary-neon); }
+        .skill-card ul { list-style: none; }
+        .skill-card li { margin-bottom: 1.2rem; font-size: 1.1rem; color: var(--text-dark); display: flex; align-items: center; }
+        .skill-card li i { margin-right: 1rem; width: 22px; text-align: center; transition: transform 0.3s; }
+        .skill-card li:hover i { transform: scale(1.3) rotate(-10deg); }
+        .skill-card.programmer li i { color: var(--primary-neon); }
+        .skill-card.gambler li i { color: var(--secondary-neon); }
+
+        /* --- SEKCJA SYMULATOR KRACHA --- */
+        #symulator { gap: 2rem; }
+        .crash-simulator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            width: 100%;
+            max-width: 900px;
+        }
+        .crash-main {
+            display: flex;
+            gap: 2rem;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .crash-graph-container {
+            flex: 2;
+            min-width: 300px;
+            background: var(--bg-light);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 350px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        .crash-multiplier {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 5rem;
+            font-weight: 700;
+            transition: color 0.5s ease, text-shadow 0.5s ease;
+            z-index: 2;
+        }
+        .crash-multiplier.color-green { color: var(--green-neon); text-shadow: 0 0 15px var(--green-neon); }
+        .crash-multiplier.color-red { color: var(--red-neon); text-shadow: 0 0 15px var(--red-neon); }
+
+        .crash-controls {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+        }
+        .crash-controls label { font-size: 1rem; color: var(--text-dark); margin-bottom: 0.5rem; }
+        .crash-controls input {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            font-family: 'Roboto Mono';
+        }
+        .crash-controls input:focus { outline: none; border-color: var(--primary-neon); box-shadow: 0 0 10px var(--primary-neon); }
+
+        #crash-button {
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        #crash-button.start { background: var(--primary-neon); color: var(--bg-dark); }
+        #crash-button.start:hover { box-shadow: 0 0 15px var(--primary-neon); }
+        #crash-button.cashout { background: var(--green-neon); color: var(--bg-dark); }
+        #crash-button.cashout:hover { box-shadow: 0 0 15px var(--green-neon); }
+        #crash-button:disabled { background: #334155; color: #64748b; cursor: not-allowed; box-shadow: none; }
+
+        .balance-display { text-align: center; }
+        .balance-display span { font-size: 2rem; color: var(--green-neon); font-family: 'Roboto Mono'; text-shadow: 0 0 8px var(--green-neon); }
+
+        .crash-history {
+            width: 100%;
+            background: var(--bg-light);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+        }
+        .crash-history h4 { text-align: center; margin-bottom: 1rem; color: var(--text-dark); font-weight: 400; }
+        .history-list {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .history-item {
+            font-family: 'Roboto Mono';
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            flex-shrink: 0;
+            font-weight: 700;
+            background: rgba(0,0,0,0.2);
+        }
+        .history-item.low { color: var(--red-neon); }
+        .history-item.high { color: var(--green-neon); }
+
+
+        /* --- GALERIA & KONTAKT --- */
+        #galeria .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; width: 100%; max-width: 1200px; }
+        .gallery-item { background-color: var(--bg-light); border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border-color); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-item .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(10, 15, 31, 0.95), transparent); color: white; padding: 2rem 1rem 1rem; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .gallery-item:hover .overlay { opacity: 1; transform: translateY(0); }
+        .overlay h4 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--primary-neon); }
+        .overlay p { font-size: 0.9rem; color: var(--text-dark); }
+        
+        #kontakt p { font-size: 1.2rem; color: var(--text-dark); margin-bottom: 3rem; max-width: 600px; text-align: center; }
+        .social-links a { color: var(--text-dark); font-size: 3rem; margin: 0 1.5rem; transition: all 0.3s ease; }
+        .social-links a:hover { transform: translateY(-8px) scale(1.1); }
+        .social-links a.steam:hover { color: #1b2838; text-shadow: 0 0 15px #66c0f4; }
+        .social-links a.github:hover { color: #ffffff; text-shadow: 0 0 15px #ffffff; }
+        .social-links a.discord:hover { color: #5865F2; text-shadow: 0 0 15px #5865F2; }
+
+        /* --- STOPKA --- */
+        footer { text-align: center; padding: 2rem; background: var(--bg-light); border-top: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-dark); }
+
+        /* --- ANIMACJE NA SCROLL --- */
+        .animated { opacity: 0; transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .fade-in { transform: translateY(50px); }
+        .slide-in-left { transform: translateX(-100px); }
+        .slide-in-right { transform: translateX(100px); }
+        .animated.visible { opacity: 1; transform: translate(0, 0); }
+
+        /* --- RESPONSYWNOŚĆ --- */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.8rem; }
+            .hero-content .subtitle { font-size: 1.4rem; }
+            .nav-links { display: none; }
+            .section-title { font-size: 2.2rem; }
+            .crash-main { flex-direction: column; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="animated-bg">
+        <div class="bg-shape shape1"></div>
+        <div class="bg-shape shape2"></div>
+    </div>
+
+    <nav>
+        <a href="#" class="logo">Bartek<span>.dev</span></a>
+        <div class="nav-links">
+            <a href="#umiejetnosci">Specjalizacje</a>
+            <a href="#symulator">Symulator</a>
+            <a href="#galeria">Galeria</a>
+            <a href="#kontakt">Kontakt</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Bartek Wąsik</h1>
+            <div class="subtitle"><span id="typing-text"></span><span class="cursor"></span></div>
+        </div>
+    </header>
+
+    <main>
+        <section id="umiejetnosci">
+            <h2 class="section-title animated fade-in">Podwójna Specjalizacja</h2>
+            <div class="skills-container">
+                <div class="skill-card programmer animated slide-in-left">
+                    <h3><i class="fas fa-code"></i>Przyszły Programista</h3>
+                    <ul>
+                        <li><i class="fab fa-html5"></i>Architektura semantycznego HTML</li>
+                        <li><i class="fab fa-css3-alt"></i>Magia wizualna w CSS & SASS</li>
+                        <li><i class="fab fa-js-square"></i>Interaktywna dominacja w JavaScript</li>
+                        <li><i class="fas fa-bug"></i>Zaawansowane debugowanie (i tworzenie) błędów</li>
+                        <li><i class="fas fa-coffee"></i>Synteza kofeiny w czysty kod</li>
+                    </ul>
+                </div>
+                <div class="skill-card gambler animated slide-in-right" style="transition-delay: 0.2s;">
+                    <h3><i class="fas fa-dice-d20"></i>Mistrz G4Skins</h3>
+                    <ul>
+                        <li><i class="fas fa-box-open"></i>Analityka predykcyjna otwierania skrzynek</li>
+                        <li><i class="fas fa-chart-line"></i>Spekulacje na rynku skinów CS:GO</li>
+                        <li><i class="fas fa-hand-holding-usd"></i>Alchemia: zamiana pikseli w zyski (czasem)</li>
+                        <li><i class="fas fa-bolt"></i>Podejmowanie decyzji o wysokim ryzyku</li>
+                        <li><i class="fas fa-pray"></i>Negocjacje z bogami losowości (RNG)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="symulator">
+            <h2 class="section-title animated fade-in">Poczuj Dreszczyk Emocji</h2>
+            <div class="crash-simulator">
+                <div class="crash-main">
+                    <div class="crash-graph-container animated fade-in">
+                        <div id="crash-multiplier" class="crash-multiplier">1.00x</div>
+                    </div>
+                    <div class="crash-controls animated slide-in-right">
+                        <div class="balance-display">
+                            <label>TWOJE WIRTUALNE SALDO</label>
+                            <span id="balance">1000.00</span>
+                        </div>
+                        <div>
+                            <label for="bet-amount">Kwota zakładu</label>
+                            <input type="number" id="bet-amount" value="100">
+                        </div>
+                        <button id="crash-button" class="start">ZACZNIJ GRĘ</button>
+                    </div>
+                </div>
+                <div class="crash-history animated fade-in" style="transition-delay: 0.2s;">
+                    <h4>Historia Krachów</h4>
+                    <div id="history-list" class="history-list">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="galeria">
+             <h2 class="section-title animated fade-in">Galeria Sukcesów</h2>
+             <div class="gallery-grid">
+                <div class="gallery-item animated fade-in">
+                    <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=1170&q=80" alt="Kod">
+                    <div class="overlay"><h4>Hello, World!</h4><p>Każda legenda ma swój początek.</p></div>
+                </div>
+                <div class="gallery-item animated fade-in" style="transition-delay: 0.1s;">
+                    <img src="https://images.unsplash.com/photo-1616440339993-9c8651a5a8e0?auto=format&fit=crop&w=1170&q=80" alt="Neonowa grafika">
+                    <div class="overlay"><h4>Legendarny Drop</h4><p>Ten jeden raz, gdy G4Skins okazał łaskę. Pamiętamy!</p></div>
+                </div>
+                <div class="gallery-item animated fade-in" style="transition-delay: 0.2s;">
+                    <img src="https://images.unsplash.com/photo-1598550487032-1ce27a8a0614?auto=format&fit=crop&w=1074&q=80" alt="Stanowisko komputerowe">
+                    <div class="overlay"><h4>Centrum Dowodzenia</h4><p>Miejsce, gdzie powstaje kod i znikają pieniądze.</p></div>
+                </div>
+             </div>
+        </section>
+
+        <section id="kontakt">
+            <div class="contact-content animated fade-in">
+                <h2 class="section-title">Znajdź Mnie</h2>
+                <p>Chcesz pogadać o refaktoryzacji kodu, a może o najlepszej strategii na kolejny case opening? Złap mnie tutaj!</p>
+                <div class="social-links">
+                    <a href="#" class="steam" aria-label="Steam" title="Steam"><i class="fab fa-steam"></i></a>
+                    <a href="#" class="github" aria-label="GitHub" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" class="discord" aria-label="Discord" title="Discord"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Stworzone z humorem dla Bartka. Powodzenia na obu frontach!</p>
+    </footer>
+
+<script>
+// --- EFEKT PISANIA NA MASZYNIE ---
+const typingText = document.getElementById('typing-text');
+const phrases = ["Przyszły Programista", "Mistrz G4Skins", "Legenda Klawiatury", "Hazardowy Król"];
+let phraseIndex = 0, charIndex = 0, isDeleting = false;
+
+function type() {
+    const currentPhrase = phrases[phraseIndex];
+    let typeSpeed = 150;
+    if (isDeleting) {
+        typingText.textContent = currentPhrase.substring(0, charIndex-- - 1);
+    } else {
+        typingText.textContent = currentPhrase.substring(0, charIndex++ + 1);
+    }
+    if (!isDeleting && charIndex === currentPhrase.length) {
+        typeSpeed = 2000; isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+        isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; typeSpeed = 500;
+    } else if (isDeleting) { typeSpeed = 75; }
+    setTimeout(type, typeSpeed);
+}
+
+// --- ANIMACJE NA SCROLL ---
+const animatedElements = document.querySelectorAll('.animated');
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.15 });
+
+animatedElements.forEach(el => observer.observe(el));
+
+
+// --- SYMULATOR KRACHA ---
+const balanceEl = document.getElementById('balance');
+const betAmountEl = document.getElementById('bet-amount');
+const crashButton = document.getElementById('crash-button');
+const multiplierEl = document.getElementById('crash-multiplier');
+const historyListEl = document.getElementById('history-list');
+
+let balance = 1000.00;
+let isGameRunning = false;
+let gameInterval;
+let multiplier;
+
+function updateBalanceDisplay() {
+    balanceEl.innerText = balance.toFixed(2);
+}
+
+function addToHistory(value) {
+    const item = document.createElement('div');
+    item.classList.add('history-item');
+    item.textContent = `${value.toFixed(2)}x`;
+    if (value < 2) {
+        item.classList.add('low');
+    } else {
+        item.classList.add('high');
+    }
+    historyListEl.prepend(item);
+    if (historyListEl.children.length > 10) {
+        historyListEl.lastChild.remove();
+    }
+}
+
+function resetGameUI() {
+    crashButton.disabled = false;
+    betAmountEl.disabled = false;
+    crashButton.className = 'start';
+    crashButton.textContent = 'ZACZNIJ GRĘ';
+    multiplierEl.classList.remove('color-green', 'color-red');
+}
+
+function endGame(crashedAt, didWin = false) {
+    isGameRunning = false;
+    clearInterval(gameInterval);
+
+    multiplierEl.textContent = `${crashedAt.toFixed(2)}x`;
+    multiplierEl.classList.add('color-red');
+    addToHistory(crashedAt);
+    
+    if(didWin) {
+        const winnings = parseFloat(betAmountEl.value) * multiplier;
+        balance += winnings;
+        updateBalanceDisplay();
+    }
+    
+    setTimeout(resetGameUI, 2000);
+}
+
+function startGame() {
+    const bet = parseFloat(betAmountEl.value);
+    if (isNaN(bet) || bet <= 0 || bet > balance) {
+        alert("Nieprawidłowa kwota zakładu lub brak środków!");
+        return;
+    }
+    
+    balance -= bet;
+    updateBalanceDisplay();
+    
+    isGameRunning = true;
+    multiplier = 1.00;
+    
+    crashButton.disabled = false;
+    betAmountEl.disabled = true;
+    crashButton.className = 'cashout';
+    crashButton.textContent = 'WYPŁAĆ!';
+    multiplierEl.textContent = '1.00x';
+    multiplierEl.classList.remove('color-green', 'color-red');
+
+    // Generowanie punktu krachu - rzadziej wysokie wartości
+    const random = Math.random();
+    const crashPoint = 1 / (1 - random);
+
+    gameInterval = setInterval(() => {
+        multiplier += 0.01 + (multiplier * 0.01); // Przyspiesza z czasem
+        multiplierEl.textContent = `${multiplier.toFixed(2)}x`;
+        crashButton.textContent = `WYPŁAĆ ${(bet * multiplier).toFixed(2)}`;
+
+        if (multiplier >= 2.0) {
+            multiplierEl.classList.add('color-green');
+        }
+
+        if (multiplier >= crashPoint) {
+            crashButton.disabled = true;
+            endGame(crashPoint, false);
+        }
+    }, 50);
+}
+
+function cashOut() {
+    crashButton.disabled = true;
+    clearInterval(gameInterval);
+    isGameRunning = false;
+    
+    const winnings = parseFloat(betAmountEl.value) * multiplier;
+    balance += winnings;
+    updateBalanceDisplay();
+    
+    multiplierEl.classList.add('color-green');
+    // Czekamy na "oficjalny" krach, ale już wygraliśmy
+    // To symuluje zachowanie prawdziwych gier
+    // W tle gra toczy się dalej aż do krachu
+    const random = Math.random();
+    const crashPoint = multiplier + (1 / (1 - random));
+    
+    gameInterval = setInterval(() => {
+        const visualMultiplier = parseFloat(multiplierEl.textContent) + 0.1;
+        if (visualMultiplier >= crashPoint) {
+            clearInterval(gameInterval);
+            addToHistory(crashPoint);
+            setTimeout(resetGameUI, 2000);
+        } else {
+            multiplierEl.textContent = `${visualMultiplier.toFixed(2)}x`;
+        }
+    }, 50);
+}
+
+crashButton.addEventListener('click', () => {
+    if (isGameRunning) {
+        cashOut();
+    } else {
+        startGame();
+    }
+});
+
+// INICJALIZACJA STRONY
+document.addEventListener('DOMContentLoaded', () => {
+    type();
+    updateBalanceDisplay();
+    // Dodaj kilka początkowych wartości do historii
+    for(let i=0; i<5; i++) {
+        addToHistory(1 + Math.random() * 4);
+    }
+});
+
+</script>
+</body>
+</html>
