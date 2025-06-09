@@ -3,440 +3,1476 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klasowy Typer Egzaminacyjny</title>
+    <title>Bartek Wąsik - Ultimate Skill Showcase v4.0</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👾</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
+        /* --- ZMIENNE I GLOBALNE STYLE (MOTYW DOMYŚLNY) --- */
         :root {
-            --primary-color: #8E2DE2;
-            --secondary-color: #4A00E0;
-            --background-start: #1e132b;
-            --background-end: #0c0514;
-            --surface-color: rgba(255, 255, 255, 0.07);
-            --surface-hover: rgba(255, 255, 255, 0.12);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-color: #f0f0f0;
-            --accent-color: #00e5ff;
-            --success-color: #2eff7b;
-            --danger-color: #ff4d4d;
-            --admin-color: #ff8c00;
+            --bg-dark: #0a0f1f;
+            --bg-light: #161d31;
+            --bg-glass: rgba(22, 29, 49, 0.6);
+            --primary-neon: #00f2fe;
+            --secondary-neon: #ff00e5;
+            --gold-neon: #ffd700;
+            --green-neon: #39ff14;
+            --red-neon: #ff1f4f;
+            --text-light: #e2e8f0;
+            --text-dark: #94a3b8;
+            --border-color: rgba(148, 163, 184, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --theme-transition: background-color 0.5s, color 0.5s, border-color 0.5s;
         }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes spin { to { transform: rotate(360deg); } }
         
+        .theme-matrix { --bg-dark:#000; --bg-light:#0D0208; --bg-glass:rgba(0,20,0,0.5); --primary-neon:#00ff00; --secondary-neon:#39ff14; --gold-neon:#00ff00; --green-neon:#00ff00; --red-neon:#cc0000; --text-light:#00ff00; --text-dark:#008F11; --border-color:rgba(0,255,0,0.2); }
+        .theme-vaporwave { --bg-dark:#0d0221; --bg-light:#261447; --bg-glass:rgba(69,29,125,0.5); --primary-neon:#ff33cc; --secondary-neon:#00e5e5; --gold-neon:#f9f871; --green-neon:#44ff99; --red-neon:#ff5050; --text-light:#f0f0f0; --text-dark:#a09abc; --border-color:rgba(0,229,229,0.2); }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--background-start), var(--background-end));
-            color: var(--text-color);
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .preloader {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: var(--background-start);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 0.5s ease;
-        }
-
-        .spinner {
-            width: 50px; height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top-color: var(--accent-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: var(--surface-color);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            animation: fadeIn 0.7s ease-out forwards;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-        }
-
-        h1 { font-size: 2em; font-weight: 700; text-shadow: 0 0 15px rgba(0, 229, 255, 0.5); }
-        .header-info { display: flex; align-items: center; gap: 15px; }
-        #admin-indicator {
-            background-color: var(--admin-color);
-            padding: 5px 12px; border-radius: 20px; font-weight: 600;
-            font-size: 0.9em; display: none; box-shadow: 0 0 10px var(--admin-color);
-        }
-        #user-balance {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            padding: 8px 16px; border-radius: 20px; font-weight: 600;
-            font-size: 1.1em; box-shadow: 0 0 15px rgba(142, 45, 226, 0.7);
-        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); color: var(--text-light); overflow-x: hidden; transition: var(--theme-transition); }
         
-        #admin-panel {
-            background: var(--surface-hover); padding: 20px;
-            border-radius: 10px; margin-bottom: 25px; display: none;
-            animation: fadeIn 0.5s ease; border: 1px solid var(--glass-border);
-        }
-        #admin-panel h2 { margin-bottom: 15px; text-align: center; color: var(--admin-color); }
-        .form-container { display: flex; gap: 10px; }
-
-        .input-field {
-            flex-grow: 1; padding: 12px; border: 1px solid transparent;
-            background-color: rgba(0, 0, 0, 0.3); border-radius: 8px; font-size: 16px;
-            color: var(--text-color); transition: border-color 0.3s ease;
-        }
-        .input-field::placeholder { color: rgba(255, 255, 255, 0.5); }
-        .input-field:focus { outline: none; border-color: var(--accent-color); }
+        *:focus-visible { outline: 2px solid var(--primary-neon); outline-offset: 3px; border-radius: 4px; }
+        input:focus-visible { outline-offset: 0; }
         
-        .btn {
-            padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer;
-            font-size: 16px; font-weight: 600; transition: all 0.2s ease;
-        }
-        .btn:active { transform: scale(0.97); }
-        .btn-primary { background-color: var(--accent-color); color: #1a1a2e; }
-        .btn-primary:hover { filter: brightness(1.1); box-shadow: 0 5px 15px rgba(0, 229, 255, 0.4); }
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -2; transition: var(--theme-transition); }
+        body::before { content:''; position:fixed; top:0; left:0; width:100vw; height:100vh; background-image:linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(90deg, var(--border-color) 1px, transparent 1px); background-size:30px 30px; z-index:-1; animation:pan-grid 60s linear infinite; }
+        @keyframes pan-grid { from { background-position: 0 0; } to { background-position: 300px 300px; } }
 
-        .student-list { list-style: none; }
-        .empty-list-message {
-            text-align: center; padding: 40px; background: var(--surface-color);
-            border-radius: 10px; border: 1px solid var(--glass-border);
-            opacity: 0; animation: fadeIn 1s 0.5s ease forwards;
-        }
-        .empty-list-message svg { width: 50px; height: 50px; margin-bottom: 15px; opacity: 0.7; }
-
-        .student-item {
-            background: var(--surface-color); border-radius: 10px; margin-bottom: 15px;
-            padding: 20px; display: flex; flex-direction: column; gap: 15px;
-            border-left: 5px solid gray;
-            transition: transform 0.3s ease, background-color 0.3s ease, border-left-color 0.3s ease;
-            opacity: 0; transform: translateX(-20px);
-        }
-        .student-item.visible { opacity: 1; transform: translateX(0); }
-        .student-item:hover { background-color: var(--surface-hover); transform: translateY(-3px); }
-        .student-item.status-zda { border-left-color: var(--success-color); }
-        .student-item.status-nie-zda { border-left-color: var(--danger-color); }
-
-        .student-info { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-        .student-name { font-size: 1.4em; font-weight: 600; }
-
-        .status-badge {
-            padding: 6px 12px; border-radius: 20px; font-size: 0.9em; font-weight: 600;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .status-badge.result-pass { background: var(--success-color); color: #111; }
-        .status-badge.result-fail { background: var(--danger-color); color: #fff; }
-        .status-badge.bet-pending { background: var(--accent-color); color: #111; }
-        .status-badge.bet-won { background: linear-gradient(45deg, #00b09b, var(--success-color)); color: #111; }
-        .status-badge.bet-lost { background: linear-gradient(45deg, #ff512f, var(--danger-color)); color: #fff; }
-        .status-badge.bet-open { background-color: #777; color: #fff; }
-
-        .actions-container { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-
-        .betting-controls { display: flex; gap: 10px; align-items: center; }
-        .bet-input {
-            width: 80px; padding: 8px; text-align: center; background-color: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--glass-border); color: var(--text-color); border-radius: 5px;
-        }
-
-        .bet-btn { padding: 8px 12px; font-size: 14px; border-radius: 5px; }
-        .btn-pass { background-color: var(--success-color); color: #111; }
-        .btn-fail { background-color: var(--danger-color); color: #fff; }
-        .btn-pass:hover { filter: brightness(1.1); }
-        .btn-fail:hover { filter: brightness(1.1); }
-
-        .admin-controls { display: flex; gap: 10px; }
-        .admin-btn { background-color: transparent; border: 1px solid #777; color: #aaa; padding: 8px 12px; font-size: 14px; }
-        .admin-btn:hover { background-color: #777; color: #fff; }
+        .main-container, nav, .skill-card, footer, #lightbox .lightbox-content { transition: var(--theme-transition); }
+        .section-title { font-size: 2.8rem; font-weight: 700; text-align: center; margin-bottom: 3.5rem; position: relative; color: var(--text-light); text-shadow: 0 0 8px var(--primary-neon), 0 0 12px var(--primary-neon); transition: var(--theme-transition); }
+        .section-title::after { content:''; position:absolute; bottom:-15px; left:50%; transform:translateX(-50%); width:100px; height:4px; background:linear-gradient(90deg, var(--primary-neon), var(--secondary-neon)); border-radius:2px; box-shadow:0 0 10px var(--primary-neon), 0 0 10px var(--secondary-neon); transition: var(--theme-transition); }
+        section { padding: 7rem 5%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .main-container { background: var(--bg-glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 30px var(--shadow-color); width: 100%; max-width: 900px; }
+        .play-button { padding: 1rem 2.5rem; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; background: var(--primary-neon); color: var(--bg-dark); }
+        .play-button:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 0 15px var(--primary-neon); }
+        .play-button:disabled { background: #334155; color: #64748b; cursor: not-allowed; box-shadow: none; transform: translateY(0); }
+        .game-controls { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin-top: 1.5rem; }
+        .game-controls .bet-input { display: flex; flex-direction: column; align-items: center; }
+        .game-controls label { font-size: 1rem; color: var(--text-dark); margin-bottom: 0.5rem; }
+        .game-controls input[type="number"] { max-width: 200px; text-align: center; padding: 0.8rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-light); font-size: 1.2rem; font-family: 'Roboto Mono'; -moz-appearance: textfield; transition: var(--theme-transition); }
+        .game-controls input[type="number"]::-webkit-outer-spin-button, .game-controls input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .game-controls input[type="number"]:focus { outline: none; border-color: var(--primary-neon); box-shadow: 0 0 10px var(--primary-neon); }
+        nav { position: fixed; top: 0; left: 0; width: 100%; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; background: var(--bg-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 1000; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-light); text-decoration: none; text-shadow: 0 0 5px var(--primary-neon); }
+        .logo span { color: var(--primary-neon); }
+        .nav-links a { color: var(--text-light); text-decoration: none; margin-left: 2.5rem; font-weight: 400; position: relative; transition: color 0.3s ease, text-shadow 0.3s ease; }
+        .nav-links a::after { content:''; position:absolute; bottom:-5px; left:0; width:0; height:2px; background:var(--primary-neon); transition:width 0.3s ease; }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-neon); text-shadow: 0 0 8px var(--primary-neon); }
+        #menu-toggle { display: none; background: none; border: none; color: var(--text-light); font-size: 2rem; cursor: pointer; z-index: 1001; }
+        .nav-right-group { display: flex; align-items: center; gap: 1rem; }
+        .settings-button { background: none; border: none; color: var(--text-dark); font-size: 1.2rem; cursor: pointer; transition: color 0.3s, text-shadow 0.3s; }
+        .settings-button:hover, .settings-button.active { color: var(--primary-neon); text-shadow: 0 0 8px var(--primary-neon); }
+        .hero { height: 100vh; text-align: center; display: flex; justify-content: center; align-items: center; }
+        .hero-content h1 { font-size: 4.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .hero-content .subtitle { font-size: 2rem; font-weight: 400; color: var(--primary-neon); font-family: 'Roboto Mono', monospace; min-height: 2.8rem; text-shadow: 0 0 8px var(--primary-neon); }
+        .subtitle .cursor { display: inline-block; background-color: var(--primary-neon); margin-left: 0.2rem; width: 4px; animation: blink 1s infinite; box-shadow: 0 0 8px var(--primary-neon); }
+        @keyframes blink { 50% { opacity: 0; } }
+        #umiejetnosci .skills-container { display:flex; justify-content:center; gap:2.5rem; flex-wrap:wrap; width:100%; }
+        .skill-card { padding:2.5rem; border-radius:20px; border:1px solid var(--border-color); flex-basis:450px; flex-grow:1; transition:transform 0.4s ease, box-shadow 0.4s ease; box-shadow:0 8px 30px var(--shadow-color); }
+        .skill-card h3 { font-size:2rem; margin-bottom:2rem; display:flex; align-items:center; gap:1rem; color:var(--primary-neon); text-shadow:0 0 8px var(--primary-neon); }
+        .skill-card.gambler h3 { color:var(--secondary-neon); text-shadow:0 0 8px var(--secondary-neon); }
+        .skill-item { list-style:none; margin-bottom:1.5rem; }
+        .skill-item-header { display:flex; align-items:center; margin-bottom:0.5rem; font-size:1.1rem; }
+        .skill-item-header i { margin-right:1rem; width:22px; text-align:center; color:var(--primary-neon); }
+        .skill-card.gambler .skill-item-header i { color:var(--secondary-neon); }
+        .skill-progress-bar { width:100%; height:8px; background-color:var(--bg-dark); border-radius:4px; overflow:hidden; border:1px solid var(--border-color); }
+        .skill-progress { width:0%; height:100%; background:linear-gradient(90deg, var(--primary-neon), var(--secondary-neon)); border-radius:4px; transition:width 1s ease-out; }
+        .skill-item:hover .skill-progress { width:var(--skill-level, 70%); }
         
-        footer {
-            text-align: center; margin-top: 30px; font-size: 0.8em;
-            color: rgba(255, 255, 255, 0.5); border-top: 1px solid var(--glass-border);
-            padding-top: 20px;
-        }
+        #game-content-wrapper { min-height: 480px; position: relative; }
+        .tab-buttons { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; justify-content: center; }
+        .tab-button { padding: 0.8rem 1.5rem; background: transparent; border: none; color: var(--text-dark); font-size: 1.1rem; font-weight: 600; cursor: pointer; position: relative; transition: color 0.3s, background-color 0.3s; }
+        .tab-button::after { content:''; position:absolute; bottom:-1px; left:0; width:0; height:3px; background:var(--primary-neon); transition:width 0.3s ease; border-radius:2px; }
+        .tab-button.active { color: var(--text-light); }
+        .tab-button.active::after { width: 100%; }
+        .game-wrapper { animation: fadeInContent 0.5s ease; position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
+        @keyframes fadeInContent { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .balance-container { text-align: center; margin-bottom: 2rem; }
+        .balance-display span { font-size: 2.5rem; color: var(--gold-neon); font-family: 'Roboto Mono'; text-shadow: 0 0 8px var(--gold-neon); display: block; transition: color 0.3s, text-shadow 0.3s; }
+        .refill-button { background: transparent; border: 1px solid var(--gold-neon); color: var(--gold-neon); padding: 0.5rem 1rem; border-radius: 8px; margin-top: 1rem; cursor: pointer; transition: all 0.3s; display: none; }
+        .refill-button:hover { background: var(--gold-neon); color: var(--bg-dark); box-shadow: 0 0 10px var(--gold-neon); }
 
-        @media (max-width: 600px) {
-            h1 { font-size: 1.5em; }
-            .student-info, .actions-container { flex-direction: column; align-items: flex-start; gap: 10px; }
-        }
+        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; max-width: 400px; margin: 1rem auto; }
+        .mine-tile { aspect-ratio: 1/1; background-color: var(--bg-light); border-radius: 8px; border: 1px solid var(--border-color); cursor: pointer; transition: all 0.3s; display: flex; justify-content: center; align-items: center; font-size: 2rem; }
+        .mine-tile:not(.revealed):hover { background-color: var(--primary-neon); transform: scale(1.05); }
+        .mine-tile.revealed.safe { background-color: var(--green-neon); color: var(--bg-dark); border-color: var(--green-neon); }
+        .mine-tile.revealed.mine { background-color: var(--red-neon); color: var(--bg-dark); border-color: var(--red-neon); animation: explode 0.5s; }
+        @keyframes explode { 0% {transform: scale(1);} 50% {transform: scale(1.2);} 100% {transform: scale(1);} }
+        .mines-controls { display: flex; gap: 2rem; align-items: center; justify-content: center; flex-wrap: wrap; }
+        .mines-info { font-family: 'Roboto Mono'; font-size: 1.2rem; text-align: center; }
+        .mines-info span { color: var(--primary-neon); }
+
+        .crash-graph-container { width: 100%; background: var(--bg-light); border-radius: 20px; border: 1px solid var(--border-color); height: 300px; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); } 
+        .crash-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; } 
+        .crash-multiplier { font-family: 'Roboto Mono'; font-size: 4rem; font-weight: 700; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; transition: color 0.3s, text-shadow 0.3s; } 
+        .crash-multiplier.color-green { color: var(--green-neon); text-shadow: 0 0 15px var(--green-neon); } 
+        .crash-multiplier.color-red { color: var(--red-neon); text-shadow: 0 0 15px var(--red-neon); } 
+        .crash-history { width: 100%; margin-top: 1rem; } .crash-history h4 { text-align: center; margin-bottom: 1rem; color: var(--text-dark); font-weight: 400; } 
+        .history-list { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 10px; justify-content: center; } 
+        .history-item { font-family: 'Roboto Mono'; padding: 0.5rem 1rem; border-radius: 8px; flex-shrink: 0; font-weight: 700; background: rgba(0,0,0,0.2); } 
+        .history-item.low { color: var(--red-neon); border: 1px solid var(--red-neon); } 
+        .history-item.high { color: var(--green-neon); border: 1px solid var(--green-neon); }
+        
+        .roulette-container { position: relative; width: 300px; height: 300px; margin: 0 auto; }
+        .roulette-wheel { width: 100%; height: 100%; border-radius: 50%; border: 10px solid var(--gold-neon); transition: transform 6s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 0 20px var(--gold-neon); }
+        .roulette-number { position: absolute; top: 20px; left: 50%; transform-origin: 0 130px; color: white; font-size: 14px; font-weight: bold; text-align: center; } 
+        .roulette-wheel::before { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:40px; height:40px; background:var(--bg-dark); border-radius:50%; border:5px solid var(--gold-neon); z-index:2; } 
+        .roulette-marker { position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-top:20px solid var(--gold-neon); z-index:5; } 
+        .roulette-betting-options { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; } 
+        .roulette-betting-options .bet-option { padding: 0.8rem 1.5rem; border: 2px solid var(--border-color); border-radius: 10px; cursor: pointer; transition: all 0.3s ease; } 
+        .roulette-betting-options .bet-option.red { border-color: var(--red-neon); color: var(--red-neon); } .roulette-betting-options .bet-option.red:hover, .roulette-betting-options .bet-option.red.selected { background-color: var(--red-neon); color: var(--bg-dark); } 
+        .roulette-betting-options .bet-option.black { border-color: var(--text-dark); color: var(--text-dark); } .roulette-betting-options .bet-option.black:hover, .roulette-betting-options .bet-option.black.selected { background-color: var(--text-dark); color: var(--bg-dark); } 
+        .roulette-betting-options .bet-option.number { border-color: var(--primary-neon); color: var(--primary-neon); } .roulette-betting-options .bet-option.number:hover, .roulette-betting-options .bet-option.number.selected { background-color: var(--primary-neon); color: var(--bg-dark); } 
+        .roulette-betting-options .bet-option.selected { transform: scale(1.1); box-shadow: 0 0 15px currentColor; background-color: currentColor; color: var(--bg-dark); animation: glowing-border 2s infinite; } 
+        @keyframes glowing-border { 0% { box-shadow: 0 0 5px currentColor; } 50% { box-shadow: 0 0 20px currentColor; } 100% { box-shadow: 0 0 5px currentColor; } }
+        .roulette-number-bet-container { display: none; }
+        .roulette-result { font-family: 'Roboto Mono'; font-size: 1.5rem; font-weight: 700; min-height: 2rem; }
+        
+        .coin-container { width: 200px; height: 200px; perspective: 1000px; margin: 0 auto; } 
+        .coin { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.5s cubic-bezier(0.5, 0, 0.5, 1); } 
+        .coin-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 6rem; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); } 
+        .coin-ct { background: linear-gradient(135deg, #0077be, #00c3ff); color: white; } 
+        .coin-t { background: linear-gradient(135deg, #ff8c00, #ffc400); color: var(--bg-dark); transform: rotateY(180deg); } 
+        .coin.flipping-ct { transform: rotateY(3600deg); } .coin.flipping-t { transform: rotateY(3780deg); } 
+        .coinflip-betting-options { display: flex; gap: 1rem; } 
+        .coinflip-betting-options .bet-option { border: 2px solid transparent; border-radius: 10px; cursor: pointer; transition: all 0.3s; padding: 1rem; font-size: 3rem; } 
+        .coinflip-betting-options .bet-option.ct-choice { color: #00c3ff; } .coinflip-betting-options .bet-option.t-choice { color: #ffc400; } 
+        .coinflip-betting-options .bet-option.selected { transform: scale(1.1); text-shadow: 0 0 15px currentColor; animation: glowing-border 2s infinite alternate; } 
+        .coinflip-result { font-family: 'Roboto Mono'; font-size: 1.5rem; font-weight: 700; min-height: 2rem; }
+
+        #achievements-container { padding: 2rem; margin-top: 2rem; text-align: center;}
+        #achievements-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 1rem; }
+        .achievement { background: var(--bg-light); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-dark); transition: all 0.3s; }
+        .achievement.unlocked { color: var(--gold-neon); border-color: var(--gold-neon); text-shadow: 0 0 8px var(--gold-neon); }
+        #system-terminal { margin-top: 2rem; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); border-radius: 10px; height: 200px; overflow-y: scroll; padding: 1rem; font-family: 'Roboto Mono', monospace; font-size: 0.9rem; }
+        .terminal-line { margin-bottom: 0.5rem; }
+        .terminal-line .timestamp { color: var(--text-dark); margin-right: 0.5rem; }
+        .terminal-line .log-info { color: var(--text-light); }
+        .terminal-line .log-success { color: var(--green-neon); }
+        .terminal-line .log-warn { color: var(--red-neon); }
+        .terminal-line .log-special { color: var(--gold-neon); }
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; }
+        .toast { background: var(--bg-glass); backdrop-filter: blur(10px); color: var(--gold-neon); padding: 1rem 1.5rem; border-radius: 10px; border-left: 5px solid var(--gold-neon); box-shadow: 0 5px 15px rgba(0,0,0,0.3); margin-bottom: 1rem; opacity: 0; transform: translateX(100%); animation: slideInToast 0.5s forwards; }
+        .toast h4 { margin: 0 0 0.25rem 0; }
+        .toast p { margin: 0; font-size: 0.9rem; }
+        @keyframes slideInToast { to { opacity: 1; transform: translateX(0); } }
+
+        #notification-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 10001; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        #notification-overlay.visible { opacity: 1; visibility: visible; }
+        .notification-modal { background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 15px; padding: 2rem; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 10px 40px var(--shadow-color); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #notification-overlay.visible .notification-modal { transform: scale(1); }
+        .notification-modal h3 { font-size: 1.8rem; color: var(--primary-neon); margin-bottom: 1rem; }
+        .notification-modal p { color: var(--text-light); margin-bottom: 2rem; font-size: 1.1rem; }
+        .notification-modal button { padding: 0.8rem 2rem; }
+
+        #gra .game-container { padding:2rem; width:auto; } #snake-canvas { background-color:var(--bg-dark); border:2px solid var(--primary-neon); box-shadow:0 0 15px var(--primary-neon); border-radius:10px; } .game-info { font-family:'Roboto Mono',monospace; font-size:1.2rem; color:var(--text-dark); text-align:center; margin-top:1rem; } .game-info span { color:var(--secondary-neon); font-weight:700; text-shadow:0 0 8px var(--secondary-neon); }
+        #galeria .gallery-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem; width:100%; max-width:1200px; } .gallery-item { background-color:var(--bg-light); border-radius:10px; overflow:hidden; position:relative; cursor:pointer; border:1px solid var(--border-color); box-shadow:0 8px 30px var(--shadow-color); transition:box-shadow 0.4s ease; } .gallery-item:hover { box-shadow:0 0 20px var(--primary-neon); } .gallery-item img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s ease; } .gallery-item:hover img { transform:scale(1.1); } .gallery-item .overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(10, 15, 31, 0.95), transparent); color:white; padding:2rem 1rem 1rem; opacity:0; transform:translateY(20px); transition:opacity 0.4s ease, transform 0.4s ease; } .gallery-item:hover .overlay { opacity:1; transform:translateY(0); } .overlay h4 { font-size:1.3rem; margin-bottom:0.5rem; color:var(--primary-neon); } .overlay p { font-size:0.9rem; color:var(--text-dark); }
+        #lightbox { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:9999; display:flex; justify-content:center; align-items:center; opacity:0; visibility:hidden; transition:opacity 0.4s ease, visibility 0.4s ease; } #lightbox.show { opacity:1; visibility:visible; } #lightbox .lightbox-content { position:relative; max-width:90vw; max-height:90vh; transform:scale(0.8); transition:transform 0.4s ease; } #lightbox.show .lightbox-content { transform:scale(1); } #lightbox img { max-width:100%; max-height:80vh; border-radius:10px; box-shadow:0 0 30px var(--primary-neon); } #lightbox .lightbox-caption { color:var(--text-light); text-align:center; margin-top:1rem; } #lightbox .lightbox-caption h4 { color:var(--primary-neon); } #lightbox .lightbox-caption p { color:var(--text-dark); } #lightbox-close { position:absolute; top:-15px; right:-15px; font-size:2rem; color:white; cursor:pointer; background:var(--bg-dark); width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; border:1px solid var(--border-color); }
+        #kontakt p { font-size:1.2rem; color:var(--text-dark); margin-bottom:3rem; max-width:600px; text-align:center; } .social-links a { color:var(--text-dark); font-size:3rem; margin:0 1.5rem; transition:all 0.3s ease; } .social-links a:hover { transform:translateY(-8px) scale(1.1); } .social-links a.steam:hover { color:#1b2838; text-shadow:0 0 15px #66c0f4; } .social-links a.github:hover { color:#ffffff; text-shadow:0 0 15px #ffffff; } .social-links a.discord:hover { color:#5865F2; text-shadow:0 0 15px #5865F2; } footer { text-align:center; padding:2rem; background:var(--bg-light); border-top:1px solid var(--border-color); font-size:0.9rem; color:var(--text-dark); }
+        .animated { opacity:0; transition:opacity 0.6s ease-out, transform 0.6s ease-out; } .animated.fade-in { transform:translateY(20px); } .animated.slide-in-left { transform:translateX(-50px); } .animated.slide-in-right { transform:translateX(50px); } .animated.visible { opacity:1; transform:translate(0, 0); }
+        @media (max-width: 900px) { section { padding: 5rem 5%; } }
+        @media (max-width: 768px) { .hero-content h1 { font-size:2.8rem; } .hero-content .subtitle { font-size:1.4rem; } .section-title { font-size:2.2rem; } #menu-toggle { display:block; } .nav-links { position:fixed; top:0; right:-100%; width:250px; height:100vh; background:var(--bg-light); display:flex; flex-direction:column; align-items:center; justify-content:center; transition:right 0.4s ease-in-out; } .nav-links.active { right:0; box-shadow:-10px 0 30px rgba(0,0,0,0.5); } .nav-links a { margin:1.5rem 0; font-size:1.2rem; } }
     </style>
 </head>
 <body>
-    <div class="preloader"><div class="spinner"></div></div>
 
-    <div class="container">
-        <header>
-            <h1>Klasowy Typer 🏆</h1>
-            <div class="header-info">
-                <span id="admin-indicator"></span>
-                <div id="user-balance"></div>
+    <div id="toast-container"></div>
+    <div id="notification-overlay">
+        <div class="notification-modal">
+            <h3 id="notification-title"></h3>
+            <p id="notification-message"></p>
+            <button id="notification-close" class="play-button">ROZUMIEM</button>
+        </div>
+    </div>
+    <canvas id="particle-canvas"></canvas>
+
+    <nav>
+        <a href="#hero" class="logo">Bartek<span>.dev</span></a>
+        <div class="nav-links" id="nav-links">
+            <a href="#umiejetnosci" class="nav-link">Specjalizacje</a>
+            <a href="#kasyno" class="nav-link">Kasyno</a>
+            <a href="#gra" class="nav-link">Gra</a>
+            <a href="#galeria" class="nav-link">Galeria</a>
+            <a href="#kontakt" class="nav-link">Kontakt</a>
+        </div>
+        <div class="nav-right-group">
+            <button class="settings-button" id="theme-default" title="Motyw Domyślny"><i class="fas fa-palette"></i></button>
+            <button class="settings-button" id="theme-matrix" title="Motyw Matrix" style="display: none;"><i class="fas fa-terminal"></i></button>
+            <button class="settings-button" id="theme-vaporwave" title="Motyw Vaporwave" style="display: none;"><i class="fas fa-moon"></i></button>
+            <button class="settings-button" id="sound-toggle" title="Wycisz/Włącz dźwięk"><i class="fas fa-volume-up"></i></button>
+            <button id="menu-toggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <header class="hero" id="hero">
+        <div class="hero-content">
+            <h1>Bartek Wąsik</h1>
+            <div class="subtitle"><span id="typing-text"></span><span class="cursor"></span></div>
+        </div>
+    </header>
+
+    <main>
+        <section id="umiejetnosci">
+            <h2 class="section-title animated fade-in">Podwójna Specjalizacja</h2>
+            <div class="skills-container">
+                <div class="skill-card programmer animated slide-in-left">
+                    <h3><i class="fas fa-code"></i>Przyszły Programista</h3>
+                    <ul>
+                        <li class="skill-item" style="--skill-level: 95%;"><div class="skill-item-header"><i class="fab fa-html5"></i><span>Architektura semantycznego HTML</span></div><div class="skill-progress-bar"><div class="skill-progress"></div></div></li>
+                        <li class="skill-item" style="--skill-level: 90%;"><div class="skill-item-header"><i class="fab fa-css3-alt"></i><span>Magia wizualna w CSS & SASS</span></div><div class="skill-progress-bar"><div class="skill-progress"></div></div></li>
+                        <li class="skill-item" style="--skill-level: 85%;"><div class="skill-item-header"><i class="fab fa-js-square"></i><span>Interaktywna dominacja w JavaScript</span></div><div class="skill-progress-bar"><div class="skill-progress"></div></div></li>
+                        <li class="skill-item" style="--skill-level: 100%;"><div class="skill-item-header"><i class="fas fa-bug"></i><span>Debugowanie (i tworzenie) błędów</span></div><div class="skill-progress-bar"><div class="skill-progress"></div></div></li>
+                    </ul>
+                </div>
+                <div class="skill-card gambler animated slide-in-right" style="transition-delay: 0.2s;">
+                    <h3><i class="fas fa-dice-d20"></i>Mistrz Hazardu</h3>
+                    <ul>
+                        <li class="skill-item" style="--skill-level: 80%;"><div class="skill-item-header"><i class="fas fa-chart-line"></i><span>Analiza prawdopodobieństwa</span></div><div class="skill-progress-bar"><div class="skill-progress"></div></div></li>
+                        <li class="skill-item" style="--skill-level: 95%;"><div class="skill-item-header"><i class="fas fa-hand-holding-usd"></i><span>Zarządzanie wirtualnym kapitałem</span></div><div class="skill-progress-bar"><div class="skill-progress"></div></div></li>
+                        <li class="skill-item" style="--skill-level: 88%;"><div class="skill-item-header"><i class="fas fa-brain"></i><span>Psychologia ryzyka</span></div><div class="skill-progress-bar"><div class="skill-progress"></div></div></li>
+                        <li class="skill-item" style="--skill-level: 100%;"><div class="skill-item-header"><i class="fas fa-pray"></i><span>Negocjacje z RNGesus</span></div><div class="skill-progress-bar"><div class="skill-progress"></div></div></li>
+                    </ul>
+                </div>
             </div>
-        </header>
+        </section>
 
-        <div id="admin-panel">
-            <h2>Panel Administratora</h2>
-            <div class="form-container">
-                <input type="text" id="student-name-input" class="input-field" placeholder="Imię i nazwisko nowego ucznia...">
-                <button id="add-student-button" class="btn btn-primary">Dodaj</button>
+        <section id="kasyno">
+            <h2 class="section-title animated fade-in">Centrum Gier</h2>
+            <div class="main-container animated fade-in">
+                <div class="balance-container">
+                    <div class="balance-display">TWOJE WIRTUALNE SALDO<span id="casino-balance-amount" aria-live="polite">1000.00</span></div>
+                    <button id="refill-button" class="refill-button">DOŁADUJ KONTO (1000)</button>
+                </div>
+                <div class="tab-buttons">
+                    <button class="tab-button active" data-tab="crash">Crash</button>
+                    <button class="tab-button" data-tab="roulette">Ruletka</button>
+                    <button class="tab-button" data-tab="coinflip">Coinflip</button>
+                    <button class="tab-button" data-tab="mines">Miny</button>
+                </div>
+                
+                <div id="game-content-wrapper"></div>
+                
+                <div id="system-terminal-container">
+                    <div id="system-terminal"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="osiagniecia">
+            <h2 class="section-title animated fade-in">Postępy i Osiągnięcia</h2>
+            <div id="achievements-container" class="main-container animated fade-in">
+                <h3>Odblokowane Osiągnięcia</h3>
+                <div id="achievements-list"></div>
+            </div>
+        </section>
+        
+        <section id="gra">
+            <h2 class="section-title animated fade-in">Chwila Przerwy</h2>
+            <div class="main-container game-container animated fade-in">
+                <canvas id="snake-canvas" width="480" height="480"></canvas>
+                <div class="game-info">
+                    <p>Sterowanie: Klawisze strzałek | Restart: 'R'</p>
+                    <p>Wynik: <span id="snake-score">0</span></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="galeria">
+            <h2 class="section-title animated fade-in">Galeria Sukcesów</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item animated fade-in" data-title="Hello, World!" data-desc="Każda legenda ma swój początek.">
+                    <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=1170&q=80" alt="Kod na ekranie komputera.">
+                    <div class="overlay"><h4>Hello, World!</h4><p>Każda legenda ma swój początek.</p></div>
+                </div>
+                <div class="gallery-item animated fade-in" style="transition-delay: 0.1s;" data-title="Legendarny Drop" data-desc="Ten jeden raz, gdy bogowie RNG okazali łaskę. Pamiętamy!">
+                    <img src="https://images.unsplash.com/photo-1616440339993-9c8651a5a8e0?auto=format&fit=crop&w=1170&q=80" alt="Neonowa grafika przedstawiająca kości do gry.">
+                    <div class="overlay"><h4>Legendarny Drop</h4><p>Ten jeden raz, gdy bogowie RNG okazali łaskę. Pamiętamy!</p></div>
+                </div>
+                <div class="gallery-item animated fade-in" style="transition-delay: 0.2s;" data-title="Centrum Dowodzenia" data-desc="Miejsce, gdzie powstaje kod i znikają pieniądze.">
+                    <img src="https://images.unsplash.com/photo-1598550487032-1ce27a8a0614?auto=format&fit=crop&w=1074&q=80" alt="Nowoczesne stanowisko komputerowe z wieloma monitorami.">
+                    <div class="overlay"><h4>Centrum Dowodzenia</h4><p>Miejsce, gdzie powstaje kod i znikają pieniądze.</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="kontakt">
+            <div class="contact-content animated fade-in">
+                <h2 class="section-title">Znajdź Mnie</h2>
+                <p>Chcesz pogadać o refaktoryzacji kodu, a może o najlepszej strategii na kolejny case opening? Złap mnie tutaj!</p>
+                <div class="social-links">
+                    <a href="#" class="steam" aria-label="Steam" title="Steam"><i class="fab fa-steam"></i></a>
+                    <a href="#" class="github" aria-label="GitHub" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" class="discord" aria-label="Discord" title="Discord"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="lightbox">
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="Powiększone zdjęcie z galerii">
+            <div id="lightbox-caption" class="lightbox-caption">
+                <h4 id="lightbox-title"></h4>
+                <p id="lightbox-desc"></p>
+            </div>
+            <div id="lightbox-close">×</div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2024 Stworzone z pasją dla Bartka. Powodzenia na obu frontach, Legendo! | Upgraded to v4.0</p>
+    </footer>
+
+    <!-- Szablony HTML dla gier -->
+    <template id="template-crash">
+        <div class="game-wrapper">
+            <div class="crash-graph-container">
+                <canvas class="crash-canvas" data-ref="canvas"></canvas>
+                <div class="crash-multiplier" data-ref="multiplier">1.00x</div>
+            </div>
+            <div class="game-controls">
+                <div class="bet-input"><label for="crash-bet-amount">Kwota zakładu</label><input type="number" data-ref="betAmount" id="crash-bet-amount" value="100"></div>
+                <button data-ref="button" class="play-button">ZACZNIJ GRĘ</button>
+            </div>
+            <div class="crash-history"><h4>Historia Krachów</h4><div class="history-list" data-ref="historyList"></div></div>
+        </div>
+    </template>
+
+    <template id="template-roulette">
+        <div class="game-wrapper">
+            <div class="roulette-container"><div data-ref="wheel" class="roulette-wheel"></div><div class="roulette-marker"></div></div>
+            <div class="game-controls">
+                <div data-ref="result" class="roulette-result">Wybierz zakład i zakręć!</div>
+                <div class="roulette-betting-options" data-ref="bettingOptions">
+                    <button class="bet-option red" data-bet="red">CZERWONE (2x)</button>
+                    <button class="bet-option black" data-bet="black">CZARNE (2x)</button>
+                    <button class="bet-option number" data-bet="number">NUMER (36x)</button>
+                </div>
+                <div data-ref="numberBetContainer" class="roulette-number-bet-container bet-input"><label for="roulette-number-bet">Wybierz numer (0-36)</label><input type="number" data-ref="numberBetInput" id="roulette-number-bet" min="0" max="36" value="7"></div>
+                <div class="bet-input"><label for="roulette-bet-amount">Kwota zakładu</label><input type="number" data-ref="betAmount" id="roulette-bet-amount" value="50"></div>
+                <button data-ref="button" class="play-button">ZAKRĘĆ</button>
             </div>
         </div>
+    </template>
 
-        <ul id="student-list" class="student-list"></ul>
+    <template id="template-coinflip">
+        <div class="game-wrapper">
+            <div class="coin-container"><div data-ref="coin" class="coin"><div class="coin-face coin-ct"><i class="fa-solid fa-shield-halved"></i></div><div class="coin-face coin-t"><i class="fa-solid fa-skull-crossbones"></i></div></div></div>
+            <div class="game-controls">
+                <div data-ref="result" class="coinflip-result">Wybierz stronę i rzuć!</div>
+                <div class="coinflip-betting-options" data-ref="bettingOptions">
+                    <button class="bet-option ct-choice" data-bet="ct" aria-label="Wybierz drużynę CT"><i class="fa-solid fa-shield-halved"></i></button>
+                    <button class="bet-option t-choice" data-bet="t" aria-label="Wybierz drużynę T"><i class="fa-solid fa-skull-crossbones"></i></button>
+                </div>
+                <div class="bet-input"><label for="coinflip-bet-amount">Kwota zakładu</label><input type="number" data-ref="betAmount" id="coinflip-bet-amount" value="100"></div>
+                <button data-ref="button" class="play-button">RZUĆ MONETĄ</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="template-mines">
+        <div class="game-wrapper">
+            <div class="mines-info">Aktualny mnożnik: <span data-ref="multiplier">1.00</span>x | Następna wygrana: <span data-ref="nextWin">0.00</span></div>
+            <div class="mines-grid" data-ref="grid"></div>
+            <div class="game-controls">
+                <div class="mines-controls">
+                    <div class="bet-input"><label for="mines-bet-amount">Stawka</label><input type="number" data-ref="betAmount" id="mines-bet-amount" value="100"></div>
+                    <div class="bet-input"><label for="mines-count">Liczba min</label><input type="number" data-ref="minesCount" id="mines-count" value="3" min="1" max="24"></div>
+                </div>
+                <button data-ref="button" class="play-button">ROZPOCZNIJ GRĘ</button>
+            </div>
+        </div>
+    </template>
+    
+    <audio id="audio-click" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_249156e103.mp3" preload="auto"></audio>
+    <audio id="audio-win" src="https://cdn.pixabay.com/download/audio/2022/11/22/audio_62c64b6392.mp3" preload="auto"></audio>
+    <audio id="audio-lose" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_b2f90a1fcf.mp3" preload="auto"></audio>
+    <audio id="audio-flip" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0a50b0f.mp3" preload="auto"></audio>
+    <audio id="audio-achievement" src="https://cdn.pixabay.com/download/audio/2022/09/20/audio_31080a242c.mp3" preload="auto"></audio>
+    <audio id="audio-mine" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_c383abd64f.mp3" preload="auto"></audio>
+
+<script type="module">
+// =================================================================================
+//  APLIKACJA GŁÓWNA - v4.0 ARCHITECT EDITION
+// =================================================================================
+
+class App {
+    constructor() {
+        this.displayAntiCheatMessage();
         
-        <footer>
-            Stworzone z pasją. Powodzenia na egzaminie!
-        </footer>
-    </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-
-    // =================================================================================
-    // === KONFIGURACJA ===
-    // BARDZO WAŻNE: ZMIEŃ 'admin123' NA SWÓJ WŁASNY, TAJNY KLUCZ!
-    const ADMIN_KEY = 'admin123';
-    // =================================================================================
-    const STARTING_BALANCE = 1000;
-    const PAYOUT_MULTIPLIER = 2;
-    const STORAGE_KEYS = {
-        STUDENTS: 'classExamStudents_v4',
-        BETS: 'classExamUserBets_v4',
-        BALANCE: 'classExamUserBalance_v4'
-    };
-
-    const $ = (selector) => document.querySelector(selector);
-    const $$ = (selector) => document.querySelectorAll(selector);
-
-    const studentNameInput = $('#student-name-input');
-    const adminPanel = $('#admin-panel');
-    const studentListContainer = $('#student-list');
-
-    let students = [];
-    let userBets = {};
-    let userBalance = STARTING_BALANCE;
-    let isAdmin = false;
-
-    // === GŁÓWNA LOGIKA ===
-    
-    const loadState = () => {
-        students = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS)) || [];
-        userBets = JSON.parse(localStorage.getItem(STORAGE_KEYS.BETS)) || {};
-        const storedBalance = localStorage.getItem(STORAGE_KEYS.BALANCE);
-        userBalance = storedBalance !== null ? parseFloat(storedBalance) : STARTING_BALANCE;
-    };
-    
-    const saveState = () => {
-        // !! WAŻNA POPRAWKA: Studentów zapisuje każdy, aby lista była widoczna.
-        // Tylko admin może ją modyfikować poprzez UI.
-        localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(students));
-        localStorage.setItem(STORAGE_KEYS.BETS, JSON.stringify(userBets));
-        localStorage.setItem(STORAGE_KEYS.BALANCE, userBalance.toString());
-    };
-
-    const initAdminMode = () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('key') === ADMIN_KEY) {
-            isAdmin = true;
-            adminPanel.style.display = 'block';
-            $('#admin-indicator').textContent = '👑 Tryb Admina';
-            $('#admin-indicator').style.display = 'inline-block';
-        }
-    };
-    
-    const checkResolvedBets = () => {
-        let balanceChanged = false;
-        students.forEach(student => {
-            const bet = userBets[student.id];
-            if (bet && !bet.paid && student.status.startsWith('Wynik')) {
-                const officialResult = student.status.includes('Zdał') ? 'Zda' : 'Nie zda';
-                if (bet.choice === officialResult) {
-                    userBalance += bet.amount * PAYOUT_MULTIPLIER;
-                    bet.status = 'won';
-                } else {
-                    bet.status = 'lost';
-                }
-                bet.paid = true;
-                balanceChanged = true;
-            }
-        });
-
-        if (balanceChanged) saveState();
-    };
-
-    // === RENDEROWANIE INTERFEJSU ===
-    const render = () => {
-        $('#user-balance').innerHTML = `Saldo: ${Math.round(userBalance)} 🪙`;
-        studentListContainer.innerHTML = '';
-
-        if (students.length === 0) {
-            studentListContainer.innerHTML = `<li class="empty-list-message">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"></path></svg>
-                <h3>Lista jest pusta</h3><p>Administrator musi dodać uczniów, aby rozpocząć typowanie.</p></li>`;
-            return;
-        }
-
-        students.forEach(student => {
-            const userBet = userBets[student.id];
-            
-            let itemStatusClass = '';
-            if (student.status.startsWith('Wynik: Zdał')) itemStatusClass = 'status-zda';
-            if (student.status.startsWith('Wynik: Nie zdał')) itemStatusClass = 'status-nie-zda';
-
-            let statusHTML = '';
-            if (student.status.startsWith('Wynik')) {
-                const resultClass = student.status.includes('Zdał') ? 'result-pass' : 'result-fail';
-                statusHTML = `<span class="status-badge ${resultClass}">${student.status}</span>`;
-            } else if (userBet) {
-                let betClass = 'bet-pending', betText = `Obstawiono: ${userBet.amount} na "${userBet.choice}"`;
-                if(userBet.status === 'won') { betClass = 'bet-won'; betText = `Wygrana! +${userBet.amount * PAYOUT_MULTIPLIER} 🪙`; } 
-                else if (userBet.status === 'lost') { betClass = 'bet-lost'; betText = `Przegrana -${userBet.amount} 🪙`; }
-                statusHTML = `<span class="status-badge ${betClass}">${betText}</span>`;
-            } else {
-                statusHTML = `<span class="status-badge bet-open">Otwarty do obstawiania</span>`;
-            }
-
-            const isResolved = student.status.startsWith('Wynik');
-            const userActions = !userBet && !isResolved ? `
-                <div class="betting-controls">
-                    <input type="number" class="bet-input" placeholder="Stawka" min="1" step="1" id="bet-amount-${student.id}">
-                    <button class="btn bet-btn btn-pass" data-action="bet-pass" data-id="${student.id}">Obstaw Zda</button>
-                    <button class="btn bet-btn btn-fail" data-action="bet-fail" data-id="${student.id}">Obstaw Nie Zda</button>
-                </div>` : '';
-            
-            const adminActions = isAdmin ? `
-                <div class="admin-controls">
-                    ${!isResolved ? `
-                    <button class="btn admin-btn" data-action="resolve-pass" data-id="${student.id}">✔️ Rozstrzygnij: Zdał</button>
-                    <button class="btn admin-btn" data-action="resolve-fail" data-id="${student.id}">❌ Rozstrzygnij: Nie zdał</button>` : ''}
-                    <button class="btn admin-btn" data-action="delete-student" data-id="${student.id}">🗑️ Usuń</button>
-                </div>` : '';
-
-            const li = document.createElement('li');
-            li.className = `student-item ${itemStatusClass}`;
-            li.innerHTML = `
-                <div class="student-info"><span class="student-name">${student.name}</span>${statusHTML}</div>
-                <div class="actions-container">${userActions}${adminActions}</div>`;
-            studentListContainer.appendChild(li);
-        });
-
-        // Animowane pojawianie się listy
-        $$('.student-item').forEach((item, index) => {
-            setTimeout(() => { item.classList.add('visible'); }, (index + 1) * 80);
-        });
-    };
-
-    // === AKCJE UŻYTKOWNIKA ===
-    const handleAddStudent = () => {
-        if (!isAdmin) return;
-        const name = studentNameInput.value.trim();
-        if (name === '') { alert('Wpisz imię i nazwisko ucznia!'); return; }
-        students.push({ id: Date.now(), name, status: 'Nieobstawione' });
-        studentNameInput.value = '';
-        saveState();
-        render();
-    };
-
-    const placeBet = (studentId, choice) => {
-        const amountInput = $(`#bet-amount-${studentId}`);
-        const amount = parseFloat(amountInput.value);
-
-        if (isNaN(amount) || amount <= 0) { alert('Podaj poprawną, dodatnią stawkę.'); return; }
-        if (amount > userBalance) { alert('Nie masz wystarczających środków!'); return; }
-        if (userBets[studentId]) { alert('Już obstawiłeś wynik dla tego ucznia!'); return; }
-
-        userBalance -= amount;
-        userBets[studentId] = { choice, amount, paid: false };
-        saveState();
-        render();
-    };
-    
-    const resolveStudent = (studentId, result) => {
-        if (!isAdmin) return;
-        const student = students.find(s => s.id === studentId);
-        if (student && confirm(`Jesteś pewien, że chcesz oznaczyć wynik dla "${student.name}" jako "${result}"?\nTa operacja jest nieodwracalna.`)) {
-            student.status = result;
-            saveState();
-            checkResolvedBets();
-            render();
-        }
-    };
-
-    const deleteStudent = (studentId) => {
-        if (!isAdmin) return;
-        const student = students.find(s => s.id === studentId);
-        if (student && confirm(`Na pewno usunąć "${student.name}"?\nWszystkie zakłady dotyczące tej osoby zostaną anulowane.`)) {
-            students = students.filter(s => s.id !== studentId);
-            delete userBets[studentId];
-            saveState();
-            render();
-        }
-    };
-
-    // === INICJALIZACJA APLIKACJI ===
-    function init() {
-        initAdminMode();
-        loadState();
-        checkResolvedBets();
-        render();
-
-        // Ukryj preloader po załadowaniu
-        const preloader = $('.preloader');
-        preloader.style.opacity = '0';
-        setTimeout(() => preloader.style.display = 'none', 500);
-
-        // Ustaw event listenery
-        if (isAdmin) {
-            $('#add-student-button').addEventListener('click', handleAddStudent);
-            studentNameInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleAddStudent();
-            });
-        }
-
-        studentListContainer.addEventListener('click', (e) => {
-            const target = e.target.closest('button');
-            if (!target) return;
-            const action = target.dataset.action;
-            const id = parseInt(target.dataset.id);
-            if (!action || !id) return;
-
-            const actions = {
-                'bet-pass': () => placeBet(id, 'Zda'),
-                'bet-fail': () => placeBet(id, 'Nie zda'),
-                'resolve-pass': () => resolveStudent(id, 'Wynik: Zdał'),
-                'resolve-fail': () => resolveStudent(id, 'Wynik: Nie zdał'),
-                'delete-student': () => deleteStudent(id)
-            };
-            
-            if (actions[action]) actions[action]();
-        });
+        this.state = new StateManager('ultimateShowcaseState_v4');
+        this.state.load();
+        
+        this.ui = new UIManager(this);
+        this.sound = new SoundManager(this);
+        this.achievements = new AchievementManager(this);
+        this.casino = new Casino(this);
+        this.particles = new Particles('particle-canvas');
+        this.snake = new SnakeGame(this);
+        
+        this.init();
     }
 
-    init();
-});
-</script>
+    init() {
+        this.sound.applyState(this.state.get('soundMuted', false));
+        this.achievements.applyState(this.state.get('achievements', []), this.state.get('stats'));
+        this.casino.applyBalance(this.state.get('balance', 1000));
+        
+        this.ui.init();
+        this.particles.init();
+        this.snake.init();
 
+        this.terminal.log('info', 'System v4.0 online. Witaj, Bartku.');
+        if (this.achievements.isUnlocked('first_visit')) {
+            this.terminal.log('special', 'Wykryto zapisany stan. Witaj ponownie!');
+        }
+        this.achievements.check('first_visit');
+        this.saveState();
+    }
+
+    saveState() {
+        this.state.set('balance', this.casino.balance);
+        this.state.set('achievements', this.achievements.unlocked);
+        this.state.set('stats', this.achievements.stats);
+        this.state.set('theme', this.ui.theme.currentTheme);
+        this.state.set('soundMuted', this.sound.isMuted);
+        this.state.save();
+    }
+    
+    get terminal() { return this.ui.terminal; }
+    get notifications() { return this.ui.notifications; }
+    get toast() { return this.ui.toast; }
+
+    displayAntiCheatMessage() {
+        const styles = 'font-size:14px;font-family:monospace;background:#0a0f1f;color:#ff1f4f;font-weight:bold;padding:10px;border-radius:5px;border:1px solid #ff1f4f';
+        const text = '\n ██████╗ ██╗      ██████╗  ██████╗██╗  ██╗\n██╔═══██╗██║     ██╔═══██╗██╔════╝██║  ██║\n██║   ██║██║     ██║   ██║██║     ███████║\n██║   ██║██║     ██║   ██║██║     ██╔══██║\n╚██████╔╝███████╗╚██████╔╝╚██████╗██║  ██║\n ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝\n \n >>> DOSTĘP ZABRONIONY! <<<\n Hej, Bartku! Wiem, że to Ty. Jak chcesz coś zmienić, to po prostu mi powiedz ;)';
+        console.log(`%c${text}`, styles);
+    }
+}
+
+class StateManager {
+    constructor(key) { this.key = key; this.data = {}; }
+    load() { const saved = localStorage.getItem(this.key); this.data = saved ? JSON.parse(saved) : {}; }
+    save() { localStorage.setItem(this.key, JSON.stringify(this.data)); }
+    get(key, defaultValue) { return this.data[key] ?? defaultValue; }
+    set(key, value) { this.data[key] = value; }
+}
+
+class SoundManager {
+    constructor(app) {
+        this.app = app;
+        this.isMuted = false;
+        this.sounds = {};
+        this.els = {
+            toggleBtn: document.getElementById('sound-toggle'),
+            icon: document.querySelector('#sound-toggle i')
+        };
+        const soundIds = ['click', 'win', 'lose', 'flip', 'achievement', 'mine'];
+        soundIds.forEach(id => {
+            const el = document.getElementById(`audio-${id}`);
+            if (el) {
+                el.volume = 0.4;
+                this.sounds[id] = el;
+            }
+        });
+        this.els.toggleBtn.addEventListener('click', () => this.toggleMute());
+    }
+    applyState(isMuted) { this.isMuted = isMuted; this.updateIcon(); }
+    play(soundName) { if (!this.isMuted && this.sounds[soundName]) { this.sounds[soundName].currentTime = 0; this.sounds[soundName].play().catch(() => {}); } }
+    toggleMute() { this.isMuted = !this.isMuted; this.updateIcon(); this.app.saveState(); }
+    updateIcon() { this.els.icon.className = this.isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up'; }
+}
+
+class UIManager {
+    constructor(app) {
+        this.app = app;
+        this.terminal = new Terminal();
+        this.notifications = new NotificationManager(this.app);
+        this.toast = new ToastManager();
+        this.theme = new ThemeSwitcher(this.app);
+        this.gallery = new Gallery();
+    }
+    init() {
+        this.setupMobileMenu();
+        this.setupTypingEffect();
+        this.setupScrollAnimations();
+        this.setupScrollSpy();
+        this.theme.init();
+        this.gallery.init();
+    }
+    setupMobileMenu() {
+        const toggle = document.getElementById('menu-toggle');
+        const nav = document.getElementById('nav-links');
+        toggle.addEventListener('click', () => nav.classList.toggle('active'));
+        nav.querySelectorAll('a').forEach(l => l.addEventListener('click', () => nav.classList.remove('active')));
+    }
+    setupTypingEffect() {
+        const el = document.getElementById('typing-text');
+        if (!el) return;
+        const phrases = ["Przyszły Programista", "Mistrz Hazardu", "Legenda Klawiatury", "Pogromca RNG"];
+        let pI = 0, cI = 0, isD = false;
+        const type = () => {
+            const cP = phrases[pI];
+            let tS = 150;
+            if (isD) { el.textContent = cP.substring(0, cI--); } else { el.textContent = cP.substring(0, cI++); }
+            if (!isD && cI === cP.length + 1) { tS = 2000; isD = true; } 
+            else if (isD && cI === 0) { isD = false; pI = (pI + 1) % phrases.length; tS = 500; } 
+            else if (isD) { tS = 75; }
+            setTimeout(type, tS);
+        };
+        type();
+    }
+    setupScrollAnimations() {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animated').forEach(el => observer.observe(el));
+    }
+    setupScrollSpy() {
+        const sections = document.querySelectorAll('section, header');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                    });
+                }
+            });
+        }, { rootMargin: '-50% 0px -50% 0px' });
+        sections.forEach(sec => { if (sec.id) observer.observe(sec); });
+    }
+}
+
+class ThemeSwitcher {
+    constructor(app) {
+        this.app = app;
+        this.currentTheme = 'default';
+        this.els = {
+            body: document.body,
+            buttons: {
+                default: document.getElementById('theme-default'),
+                matrix: document.getElementById('theme-matrix'),
+                vaporwave: document.getElementById('theme-vaporwave'),
+            }
+        };
+    }
+    init() {
+        Object.entries(this.els.buttons).forEach(([themeName, button]) => {
+            button.addEventListener('click', () => this.setTheme(themeName));
+        });
+        this.setTheme(this.app.state.get('theme', 'default'), true);
+    }
+    setTheme(themeName, onInit = false) {
+        this.els.body.className = themeName === 'default' ? '' : `theme-${themeName}`;
+        this.currentTheme = themeName;
+        if (!onInit) {
+            this.app.sound.play('click');
+            this.app.terminal.log('info', `Motyw zmieniony na: ${themeName.toUpperCase()}`);
+            this.app.saveState();
+        }
+    }
+}
+
+class Terminal {
+    constructor() { this.el = document.getElementById('system-terminal'); }
+    log(type, message) {
+        if (!this.el) return;
+        const timestamp = new Date().toLocaleTimeString();
+        const line = document.createElement('div');
+        line.className = 'terminal-line';
+        line.innerHTML = `<span class="timestamp">[${timestamp}]</span> <span class="log-${type}">${message}</span>`;
+        this.el.appendChild(line);
+        this.el.scrollTop = this.el.scrollHeight;
+    }
+}
+
+class NotificationManager {
+    constructor(app) {
+        this.app = app;
+        this.els = {
+            overlay: document.getElementById('notification-overlay'),
+            title: document.getElementById('notification-title'),
+            message: document.getElementById('notification-message'),
+            closeBtn: document.getElementById('notification-close'),
+        };
+        this.els.closeBtn.addEventListener('click', () => this.hide());
+        this.els.overlay.addEventListener('click', e => { if(e.target === this.els.overlay) this.hide(); });
+    }
+    show(title, message) {
+        this.els.title.textContent = title;
+        this.els.message.textContent = message;
+        this.els.overlay.classList.add('visible');
+    }
+    hide() {
+        this.els.overlay.classList.remove('visible');
+    }
+}
+
+class ToastManager {
+    constructor() { this.container = document.getElementById('toast-container'); }
+    show(title, message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<h4><i class="fas fa-trophy"></i> ${title}</h4><p>${message}</p>`;
+        this.container.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = 0; toast.style.transform = 'translateX(120%)'; }, 4000);
+        setTimeout(() => toast.remove(), 4500);
+    }
+}
+
+class AchievementManager {
+    constructor(app) {
+        this.app = app;
+        this.unlocked = [];
+        this.listEl = document.getElementById('achievements-list');
+        this.stats = this.getDefaultStats();
+        this.definitions = [
+            { id: 'first_visit', title: 'Pierwsze Kroki', description: 'Odwiedź stronę po raz pierwszy.', condition: trigger => trigger === 'first_visit' },
+            { id: 'first_game', title: 'Początkujący Gracz', description: 'Zagraj w swoją pierwszą grę.', condition: () => this.stats.games_played >= 1 },
+            { id: 'first_win', title: 'Smak Zwycięstwa', description: 'Wygraj pierwszą grę.', condition: () => this.stats.wins >= 1 },
+            { id: 'first_loss', title: 'Gorzka Pigułka', description: 'Przegraj pierwszą grę.', condition: () => this.stats.losses >= 1 },
+            { id: 'bankrupt', title: 'Bankrut', description: 'Strac wszystko i zresetuj saldo.', condition: trigger => trigger === 'refill' },
+            { id: 'high_roller', title: 'Gruba Ryba', description: 'Postaw ponad 500 w jednej grze.', condition: (t, v) => t === 'bet' && v >= 500 },
+            { id: 'big_win', title: 'Wielka Wygrana', description: 'Wygraj ponad 1000 w jednej grze.', condition: (t, v) => t === 'win_amount' && v >= 1000 },
+            { id: 'ten_wins', title: 'Weteran', description: 'Wygraj 10 gier.', condition: () => this.stats.wins >= 10 },
+            { id: 'crash_pro', title: 'Pilot Testowy', description: 'Wypłać w grze Crash przy mnożniku 5x lub wyższym.', condition: (t, v) => t === 'crash_cashout' && v >= 5 },
+            { id: 'crash_fail', title: 'Kraksa na 1.01x', description: 'Przegraj w Crash na mnożniku 1.01x lub niższym.', condition: (t,v) => t === 'crash_loss' && v <= 1.01 },
+            { id: 'roulette_luck', title: 'Strzał w Dziesiątkę', description: 'Traf numer w ruletce.', condition: trigger => trigger === 'roulette_number_win' },
+            { id: 'snake_master', title: 'Wężowy Król', description: 'Zdobądź 10 punktów w Snake.', condition: () => this.stats.snake_max_score >= 10 },
+            { id: 'hacker', title: 'Haker', description: 'Spróbuj oszukać system.', condition: trigger => trigger === 'cheat_attempt', reward: () => document.getElementById('theme-matrix').style.display = 'block' },
+            { id: 'night_owl', title: 'Nocny Marek', description: 'Graj pomiędzy północą a 6 rano.', condition: () => { const h = new Date().getHours(); return h >= 0 && h < 6; }, reward: () => document.getElementById('theme-vaporwave').style.display = 'block'},
+            { id: 'mine_sweeper', title: 'Saper', description: 'Wygraj w Polu Minowym.', condition: trigger => trigger === 'mines_win'},
+            { id: 'unlucky', title: 'Pechowiec', description: 'Traf na minę na pierwszym kliknięciu.', condition: trigger => trigger === 'mines_first_click_loss'},
+        ];
+    }
+    getDefaultStats() { return { games_played: 0, wins: 0, losses: 0, total_bet: 0, total_won: 0, snake_max_score: 0 }; }
+    applyState(unlocked, stats) {
+        this.unlocked = unlocked || [];
+        this.stats = stats || this.getDefaultStats();
+        this.renderAll();
+    }
+    isUnlocked(id) { return this.unlocked.includes(id); }
+    check(trigger, value = null) {
+        this.definitions.forEach(ach => {
+            if (!this.isUnlocked(ach.id) && ach.condition(trigger, value)) {
+                this.unlock(ach);
+            }
+        });
+        this.app.saveState();
+    }
+    unlock(achievement) {
+        this.unlocked.push(achievement.id);
+        const el = document.getElementById(`ach-${achievement.id}`);
+        if(el) el.classList.add('unlocked');
+        
+        this.app.sound.play('achievement');
+        this.app.terminal.log('special', `[OSIĄGNIĘCIE] ${achievement.title}`);
+        this.app.toast.show('Osiągnięcie!', achievement.title);
+        if (achievement.reward) achievement.reward();
+    }
+    renderAll() {
+        this.listEl.innerHTML = '';
+        this.definitions.forEach(ach => {
+            const el = document.createElement('div');
+            el.id = `ach-${ach.id}`;
+            el.className = 'achievement';
+            if (this.isUnlocked(ach.id)) {
+                el.classList.add('unlocked');
+                if (ach.reward) ach.reward(); // Ensure rewards are applied on load
+            }
+            el.title = ach.description;
+            el.textContent = ach.title;
+            this.listEl.appendChild(el);
+        });
+    }
+}
+
+class Casino {
+    constructor(app) {
+        this.app = app;
+        this.balance = 1000;
+        this.activeGame = null;
+        this.els = {
+            balanceDisplay: document.getElementById('casino-balance-amount'),
+            refillButton: document.getElementById('refill-button'),
+            tabButtons: document.querySelector('.tab-buttons'),
+            gameWrapper: document.getElementById('game-content-wrapper')
+        };
+        
+        this.games = {
+            crash: new CrashGame(this),
+            roulette: new RouletteGame(this),
+            coinflip: new CoinflipGame(this),
+            mines: new MinesGame(this),
+        };
+        
+        this.init();
+    }
+    init() {
+        this.els.tabButtons.addEventListener('click', e => {
+            const button = e.target.closest('.tab-button');
+            if (button && !button.classList.contains('active')) {
+                this.app.sound.play('click');
+                this.els.tabButtons.querySelector('.active')?.classList.remove('active');
+                button.classList.add('active');
+                this.switchGame(button.dataset.tab);
+            }
+        });
+        this.els.refillButton.addEventListener('click', () => this.refillBalance());
+        this.switchGame('crash'); // Domyślna gra
+    }
+    applyBalance(balance) { this.balance = balance; this.updateBalanceDisplay(); }
+    switchGame(gameId) {
+        if (this.activeGame?.state.isActive) return;
+        if (this.games[gameId]) {
+            this.activeGame = this.games[gameId];
+            this.activeGame.mount(this.els.gameWrapper);
+        }
+    }
+    updateBalance(amount, type) {
+        this.balance += amount;
+        
+        const balanceSpan = this.els.balanceDisplay;
+        if (type === 'win') {
+            balanceSpan.style.color = 'var(--green-neon)'; balanceSpan.style.textShadow = '0 0 15px var(--green-neon)';
+            this.app.sound.play('win');
+            this.app.achievements.stats.wins++;
+            this.app.achievements.stats.total_won += amount;
+            this.app.achievements.check('win_amount', amount);
+        } else if (type === 'loss') {
+            balanceSpan.style.color = 'var(--red-neon)'; balanceSpan.style.textShadow = '0 0 15px var(--red-neon)';
+            this.app.sound.play('lose');
+            this.app.achievements.stats.losses++;
+        }
+        
+        this.updateBalanceDisplay();
+        this.app.achievements.check(); // Sprawdź osiągnięcia oparte na statystykach
+        this.app.saveState();
+        
+        setTimeout(() => { balanceSpan.style.color = ''; balanceSpan.style.textShadow = ''; }, 1200);
+    }
+    updateBalanceDisplay() {
+        this.els.balanceDisplay.textContent = this.balance.toFixed(2);
+        this.els.refillButton.style.display = this.balance <= 0 ? 'inline-block' : 'none';
+    }
+    refillBalance() {
+        this.app.sound.play('win');
+        this.balance = 1000.00;
+        this.app.achievements.check('refill');
+        this.updateBalanceDisplay();
+        this.app.terminal.log('warn', 'Saldo zresetowane. Niech los Ci sprzyja!');
+        this.app.saveState();
+    }
+}
+
+class Game {
+    constructor(id, casino) {
+        this.id = id;
+        this.casino = casino;
+        this.app = casino.app;
+        this.elements = {};
+        this.state = { isActive: false, bet: 0 };
+        
+        this.template = document.getElementById(`template-${id}`);
+        if (!this.template) throw new Error(`Template for game "${id}" not found!`);
+        
+        const content = this.template.content.cloneNode(true);
+        content.querySelectorAll('[data-ref]').forEach(el => {
+            this.elements[el.dataset.ref] = el;
+        });
+        this.container = content;
+    }
+    mount(parent) {
+        parent.innerHTML = '';
+        parent.appendChild(this.container);
+        this.initEventListeners();
+        this.reset();
+    }
+    initEventListeners() { /* Do nadpisania */ }
+    reset() { /* Do nadpisania */ }
+    handleBet(betAmountInput) {
+        const bet = parseFloat(betAmountInput.value);
+        if (isNaN(bet) || bet <= 0) {
+            this.app.notifications.show("Nieprawidłowa kwota", "Wprowadź poprawną, dodatnią kwotę zakładu.");
+            return false;
+        }
+        if (bet > this.casino.balance) {
+            this.app.notifications.show("Brak środków", `Nie masz wystarczającej ilości wirtualnych środków. Twoje saldo: ${this.casino.balance.toFixed(2)}`);
+            return false;
+        }
+        this.state.bet = bet;
+        this.casino.updateBalance(-bet, 'bet');
+        this.app.achievements.stats.games_played++;
+        this.app.achievements.check('bet', bet);
+        return true;
+    }
+    setControls(disabled) {
+        Object.values(this.elements).forEach(el => {
+            if(el.tagName === 'BUTTON' || el.tagName === 'INPUT') {
+                el.disabled = disabled;
+            }
+        });
+    }
+}
+
+class MinesGame extends Game {
+    constructor(casino) {
+        super('mines', casino);
+        this.state.tiles = [];
+        this.state.revealed = [];
+        this.state.revealedCount = 0;
+    }
+    initEventListeners() {
+        this.elements.button.addEventListener('click', () => this.onButtonClick());
+    }
+    onButtonClick() {
+        this.app.sound.play('click');
+        this.state.isActive ? this.cashOut() : this.startGame();
+    }
+    startGame() {
+        if (!this.handleBet(this.elements.betAmount)) return;
+
+        const minesCount = parseInt(this.elements.minesCount.value);
+        if (isNaN(minesCount) || minesCount < 1 || minesCount > 24) {
+            this.app.notifications.show('Błąd', 'Liczba min musi być pomiędzy 1 a 24.');
+            this.casino.updateBalance(this.state.bet, 'refund'); // Zwrot stawki
+            return;
+        }
+        
+        this.state.isActive = true;
+        this.state.minesCount = minesCount;
+        this.state.tiles = this.generateTiles(minesCount);
+        this.state.revealed = [];
+        this.state.revealedCount = 0;
+        
+        this.setControls(true);
+        this.elements.button.disabled = false;
+        this.elements.button.textContent = 'WYPŁAĆ';
+        this.elements.button.style.background = 'var(--green-neon)';
+        
+        this.renderGrid();
+        this.updateInfo();
+        this.app.terminal.log('info', `Miny: Rozpoczęto grę za ${this.state.bet.toFixed(2)} z ${minesCount} minami.`);
+    }
+    cashOut() {
+        if (!this.state.isActive || this.state.revealedCount === 0) return;
+        const winnings = this.state.bet * this.calculateMultiplier(this.state.revealedCount, this.state.minesCount);
+        this.casino.updateBalance(winnings, 'win');
+        this.app.terminal.log('success', `Miny: Wypłacono ${winnings.toFixed(2)} przy mnożniku ${this.calculateMultiplier(this.state.revealedCount, this.state.minesCount).toFixed(2)}x.`);
+        this.app.achievements.check('mines_win');
+        this.endGame(false);
+    }
+    endGame(lost = false) {
+        this.state.isActive = false;
+        this.setControls(false);
+        this.elements.button.textContent = "ROZPOCZNIJ GRĘ";
+        this.elements.button.style.background = '';
+        if (lost) {
+            this.state.tiles.forEach((isMine, i) => this.revealTile(i, isMine));
+        }
+    }
+    handleTileClick(index) {
+        if (!this.state.isActive || this.state.revealed.includes(index)) return;
+        
+        this.app.sound.play('mine');
+        this.state.revealed.push(index);
+        
+        const isMine = this.state.tiles[index];
+        this.revealTile(index, isMine);
+
+        if (isMine) {
+            this.app.sound.play('lose');
+            this.app.terminal.log('warn', `Miny: BUM! Gra przegrana.`);
+            if (this.state.revealedCount === 0) this.app.achievements.check('mines_first_click_loss');
+            this.endGame(true);
+        } else {
+            this.state.revealedCount++;
+            this.updateInfo();
+            if (this.state.revealedCount === 25 - this.state.minesCount) {
+                this.cashOut();
+            }
+        }
+    }
+    updateInfo() {
+        const mult = this.calculateMultiplier(this.state.revealedCount, this.state.minesCount);
+        const nextMult = this.calculateMultiplier(this.state.revealedCount + 1, this.state.minesCount);
+        this.elements.multiplier.textContent = mult.toFixed(2);
+        this.elements.nextWin.textContent = (this.state.bet * nextMult).toFixed(2);
+    }
+    renderGrid() {
+        this.elements.grid.innerHTML = '';
+        for (let i = 0; i < 25; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'mine-tile';
+            tile.dataset.index = i;
+            tile.addEventListener('click', () => this.handleTileClick(i));
+            this.elements.grid.appendChild(tile);
+        }
+    }
+    revealTile(index, isMine) {
+        const tileEl = this.elements.grid.children[index];
+        if(!tileEl) return;
+        tileEl.classList.add('revealed', isMine ? 'mine' : 'safe');
+        tileEl.innerHTML = isMine ? '<i class="fas fa-bomb"></i>' : '<i class="fas fa-star"></i>';
+    }
+    generateTiles(mineCount) {
+        const arr = Array(25).fill(false);
+        let minesPlaced = 0;
+        while (minesPlaced < mineCount) {
+            const pos = Math.floor(Math.random() * 25);
+            if (!arr[pos]) {
+                arr[pos] = true;
+                minesPlaced++;
+            }
+        }
+        return arr;
+    }
+    calculateMultiplier(cleared, mines) {
+        if (cleared === 0) return 1;
+        let nom = 1, den = 1;
+        for (let i = 0; i < cleared; i++) {
+            nom *= (25 - mines - i);
+            den *= (25 - i);
+        }
+        return 0.95 * (1 / (nom / den));
+    }
+    reset() {
+        this.endGame();
+        this.updateInfo();
+        this.renderGrid();
+    }
+}
+
+class CrashGame extends Game {
+    constructor(casino) {
+        super('crash', casino);
+        this.state.multiplier = 1.0;
+        this.state.crashPoint = 0;
+        this.state.animationFrameId = null;
+        this.gameLoop = this.gameLoop.bind(this);
+        this.resizeCanvas = this.resizeCanvas.bind(this);
+    }
+    mount(parent) {
+        super.mount(parent);
+        this.ctx = this.elements.canvas.getContext('2d');
+        window.addEventListener('resize', this.resizeCanvas);
+        this.resizeCanvas();
+        this.reset();
+    }
+    initEventListeners() {
+        this.elements.button.addEventListener('click', () => this.onButtonClick());
+    }
+    onButtonClick() {
+        this.app.sound.play('click');
+        this.state.isActive ? this.cashOut() : this.startGame();
+    }
+    startGame() {
+        if (!this.handleBet(this.elements.betAmount)) return;
+        this.state.isActive = true;
+        this.state.crashPoint = Math.max(1.01, 1 / (1 - Math.random()));
+        this.state.multiplier = 1.0;
+
+        this.setControls(true);
+        this.elements.button.disabled = false;
+        this.elements.button.textContent = 'WYPŁAĆ';
+        this.elements.button.style.background = 'var(--green-neon)';
+        this.elements.multiplier.classList.remove('color-green', 'color-red');
+        
+        this.app.terminal.log('info', `Crash: Rozpoczęto grę za ${this.state.bet.toFixed(2)}.`);
+        this.state.animationFrameId = requestAnimationFrame(this.gameLoop);
+    }
+    gameLoop() {
+        this.state.multiplier += 0.01 + this.state.multiplier * 0.005;
+        this.elements.multiplier.textContent = `${this.state.multiplier.toFixed(2)}x`;
+        this.elements.button.textContent = `WYPŁAĆ ${(this.state.bet * this.state.multiplier).toFixed(2)}`;
+        this.drawGraph(this.state.multiplier);
+        
+        if (this.state.multiplier >= 2 && !this.elements.multiplier.classList.contains('color-green')) {
+            this.elements.multiplier.classList.add('color-green');
+        }
+        if (this.state.multiplier >= this.state.crashPoint) {
+            this.endGame(this.state.crashPoint, true);
+        } else {
+            this.state.animationFrameId = requestAnimationFrame(this.gameLoop);
+        }
+    }
+    cashOut() {
+        cancelAnimationFrame(this.state.animationFrameId);
+        const winnings = this.state.bet * this.state.multiplier;
+        this.casino.updateBalance(winnings, 'win');
+        this.addHistory(this.state.multiplier);
+        this.app.terminal.log('success', `Crash: Wypłacono ${winnings.toFixed(2)} przy mnożniku ${this.state.multiplier.toFixed(2)}x.`);
+        this.app.achievements.check('crash_cashout', this.state.multiplier);
+        this.endGame(this.state.multiplier, false);
+    }
+    endGame(crashValue, lost) {
+        this.state.isActive = false;
+        cancelAnimationFrame(this.state.animationFrameId);
+        this.drawGraph(crashValue, true);
+        this.elements.multiplier.textContent = `${crashValue.toFixed(2)}x`;
+        this.setControls(true); // Disable all until reset
+        
+        if (lost) {
+            this.elements.multiplier.classList.add('color-red');
+            this.addHistory(crashValue);
+            this.app.terminal.log('warn', `Crash: Kraksa przy ${crashValue.toFixed(2)}x.`);
+            this.app.achievements.check('crash_loss', crashValue);
+        } else {
+            this.elements.multiplier.classList.add('color-green');
+        }
+
+        setTimeout(() => this.reset(), 2000);
+    }
+    reset() {
+        this.state.isActive = false;
+        this.setControls(false);
+        this.elements.button.textContent = "ZACZNIJ GRĘ";
+        this.elements.button.style.background = '';
+        this.elements.multiplier.classList.remove('color-green', 'color-red');
+        this.elements.multiplier.textContent = "1.00x";
+        this.drawGraph(1, false, true); // clear
+    }
+    addHistory(value) {
+        const item = document.createElement('div');
+        item.className = `history-item ${value < 2 ? 'low' : 'high'}`;
+        item.textContent = `${value.toFixed(2)}x`;
+        this.elements.historyList.prepend(item);
+        if (this.elements.historyList.children.length > 15) {
+            this.elements.historyList.lastChild.remove();
+        }
+    }
+    resizeCanvas() {
+        const container = this.elements.canvas.parentElement;
+        this.elements.canvas.width = container.clientWidth;
+        this.elements.canvas.height = container.clientHeight;
+        this.drawGraph(this.state.isActive ? this.state.multiplier : 1.0, false, !this.state.isActive);
+    }
+    drawGraph(m, crashed = false, clear = false) {
+        const ctx = this.ctx, w = this.elements.canvas.width, h = this.elements.canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        if (clear) return;
+        const maxMult = Math.max(2, m * 1.2), scaleY = h / maxMult, scaleX = w / (Math.log(maxMult) / Math.log(1.2));
+        ctx.beginPath(); ctx.moveTo(0, h); ctx.lineWidth = 3;
+        const grad = ctx.createLinearGradient(0, h, 0, 0);
+        grad.addColorStop(0, crashed ? "var(--red-neon)" : "var(--green-neon)");
+        grad.addColorStop(1, crashed ? "rgba(255,31,79,0)" : "rgba(57,255,20,0)");
+        ctx.strokeStyle = grad;
+        for (let v = 1; v <= m; v += 0.05) {
+            const x = Math.log(v) / Math.log(1.2) * scaleX, y = h - v * scaleY;
+            ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+}
+
+class RouletteGame extends Game {
+    constructor(casino) {
+        super('roulette', casino);
+        this.config = {
+            numbers: [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26],
+            colors: { red: [32, 19, 21, 25, 34, 27, 36, 30, 23, 5, 16, 1, 20, 31, 22, 18, 29, 12, 35, 3], black: [15, 4, 2, 17, 6, 13, 11, 8, 10, 24, 33, 14, 9, 7, 28, 26], green: [0] }
+        };
+        this.state.currentRotation = 0;
+        this.state.selectedBetType = null;
+        this.generateWheel();
+    }
+    generateWheel() {
+        const wheel = this.elements.wheel;
+        const segmentAngle = 360 / this.config.numbers.length;
+        let gradientString = 'conic-gradient(';
+        let currentAngle = 0;
+
+        this.config.numbers.forEach((num, i) => {
+            const colorVar = this.getNumberColorVar(num);
+            gradientString += `${colorVar} ${currentAngle}deg, ${colorVar} ${currentAngle + segmentAngle}deg,`;
+            
+            const numberEl = document.createElement('div');
+            numberEl.className = 'roulette-number';
+            numberEl.textContent = num;
+            const angle = (i * segmentAngle) + (segmentAngle / 2);
+            numberEl.style.transform = `rotate(${angle}deg) translateX(125px) rotate(-${angle}deg)`;
+            wheel.appendChild(numberEl);
+            currentAngle += segmentAngle;
+        });
+        wheel.style.backgroundImage = gradientString.slice(0, -1) + ')';
+    }
+    getNumberColorVar(num) {
+        if (this.config.colors.red.includes(num)) return 'var(--red-neon)';
+        if (this.config.colors.black.includes(num)) return 'var(--bg-dark)';
+        return 'var(--green-neon)';
+    }
+    initEventListeners() {
+        this.elements.button.addEventListener('click', () => this.spin());
+        this.elements.bettingOptions.addEventListener('click', e => this.selectBet(e));
+    }
+    selectBet(e) {
+        if (this.state.isActive) return;
+        const target = e.target.closest('.bet-option');
+        if (target) {
+            this.app.sound.play('click');
+            this.elements.bettingOptions.querySelector('.selected')?.classList.remove('selected');
+            target.classList.add('selected');
+            this.state.selectedBetType = target.dataset.bet;
+            this.elements.numberBetContainer.style.display = this.state.selectedBetType === 'number' ? 'flex' : 'none';
+        }
+    }
+    spin() {
+        if (this.state.isActive || !this.state.selectedBetType) {
+            this.app.notifications.show("Błąd", "Wybierz rodzaj zakładu przed zakręceniem kołem.");
+            return;
+        }
+        if (!this.handleBet(this.elements.betAmount)) return;
+
+        this.state.isActive = true;
+        this.setControls(true);
+        this.elements.bettingOptions.querySelectorAll('.bet-option').forEach(el => el.style.pointerEvents = 'none');
+        this.elements.result.textContent = "Kręci się...";
+        this.app.terminal.log('info', `Ruletka: Zakręcono za ${this.state.bet.toFixed(2)} na ${this.state.selectedBetType}.`);
+
+        const winIndex = Math.floor(Math.random() * this.config.numbers.length);
+        const segmentAngle = 360 / this.config.numbers.length;
+        const randomOffset = (Math.random() - 0.5) * segmentAngle * 0.8;
+        const targetAngle = 360 - (winIndex * segmentAngle) - (segmentAngle / 2) + randomOffset;
+        const spins = Math.floor(Math.random() * 5) + 5;
+        const finalRotation = this.state.currentRotation + (spins * 360) + targetAngle;
+        
+        this.elements.wheel.style.transform = `rotate(${finalRotation}deg)`;
+        this.state.currentRotation = finalRotation;
+        
+        this.elements.wheel.addEventListener('transitionend', () => this.handleResult(winIndex), { once: true });
+    }
+    handleResult(winIndex) {
+        const winningNumber = this.config.numbers[winIndex];
+        let winningColor = '';
+        if (this.config.colors.red.includes(winningNumber)) winningColor = 'red';
+        else if (this.config.colors.black.includes(winningNumber)) winningColor = 'black';
+        else winningColor = 'number'; // 0 is special
+
+        let winnings = 0;
+        if(this.state.selectedBetType === 'number') {
+            const userNumber = parseInt(this.elements.numberBetInput.value);
+            if(userNumber === winningNumber) {
+                winnings = this.state.bet * 36;
+                this.app.achievements.check('roulette_luck');
+            }
+        } else if(this.state.selectedBetType === winningColor) {
+            winnings = this.state.bet * 2;
+        }
+
+        const colorVar = this.getNumberColorVar(winningNumber);
+        this.elements.result.innerHTML = `Wypadło: <span style="color:${colorVar}; text-shadow: 0 0 8px ${colorVar}">${winningNumber}</span>`;
+        
+        if (winnings > 0) {
+            this.casino.updateBalance(winnings, 'win');
+            this.elements.result.innerHTML += " - Wygrałeś!";
+            this.app.terminal.log('success', `Ruletka: Wygrana ${winnings.toFixed(2)}.`);
+        } else {
+            this.elements.result.innerHTML += " - Przegrałeś.";
+            this.app.terminal.log('warn', `Ruletka: Przegrana ${this.state.bet.toFixed(2)}.`);
+        }
+
+        this.state.isActive = false;
+        this.setControls(false);
+        this.elements.bettingOptions.querySelectorAll('.bet-option').forEach(el => el.style.pointerEvents = 'auto');
+    }
+    reset() {
+        this.state.isActive = false;
+        this.state.selectedBetType = null;
+        this.setControls(false);
+        this.elements.result.textContent = "Wybierz zakład i zakręć!";
+        this.elements.bettingOptions.querySelector('.selected')?.classList.remove('selected');
+        this.elements.numberBetContainer.style.display = 'none';
+    }
+}
+
+class CoinflipGame extends Game {
+    constructor(casino) {
+        super('coinflip', casino);
+        this.state.selectedSide = null;
+    }
+    initEventListeners() {
+        this.elements.button.addEventListener('click', () => this.flip());
+        this.elements.bettingOptions.addEventListener('click', e => this.selectSide(e));
+    }
+    selectSide(e) {
+        if (this.state.isActive) return;
+        const target = e.target.closest('.bet-option');
+        if (target) {
+            this.app.sound.play('click');
+            this.elements.bettingOptions.querySelector('.selected')?.classList.remove('selected');
+            target.classList.add('selected');
+            this.state.selectedSide = target.dataset.bet;
+        }
+    }
+    flip() {
+        if (this.state.isActive || !this.state.selectedSide) {
+            this.app.notifications.show("Błąd", "Wybierz stronę monety przed rzutem.");
+            return;
+        }
+        if (!this.handleBet(this.elements.betAmount)) return;
+
+        this.state.isActive = true;
+        this.setControls(true);
+        this.elements.bettingOptions.querySelectorAll('.bet-option').forEach(el => el.style.pointerEvents = 'none');
+        this.elements.result.textContent = "Rzucam...";
+        this.app.sound.play('flip');
+        this.app.terminal.log('info', `Coinflip: Rzucono za ${this.state.bet.toFixed(2)} na ${this.state.selectedSide}.`);
+
+        const outcome = Math.random() < 0.5 ? 'ct' : 't';
+        this.elements.coin.className = 'coin'; // Reset animation
+        void this.elements.coin.offsetWidth; // Trigger reflow
+        this.elements.coin.classList.add(outcome === 'ct' ? 'flipping-ct' : 'flipping-t');
+
+        setTimeout(() => this.handleResult(outcome), 1500);
+    }
+    handleResult(outcome) {
+        const won = outcome === this.state.selectedSide;
+        const iconClass = `fa-solid ${outcome === "ct" ? "fa-shield-halved" : "fa-skull-crossbones"}`;
+        const iconColor = outcome === "ct" ? "#00c3ff" : "#ffc400";
+        this.elements.result.innerHTML = `Wypadło <i class="${iconClass}" style="color:${iconColor}"></i>`;
+
+        if (won) {
+            const winnings = this.state.bet * 2;
+            this.casino.updateBalance(winnings, 'win');
+            this.elements.result.innerHTML += " - Wygrałeś!";
+            this.app.terminal.log('success', `Coinflip: Wygrana ${winnings.toFixed(2)}.`);
+        } else {
+            this.elements.result.innerHTML += " - Przegrałeś.";
+            this.app.terminal.log('warn', `Coinflip: Przegrana ${this.state.bet.toFixed(2)}.`);
+        }
+        this.state.isActive = false;
+        this.setControls(false);
+        this.elements.bettingOptions.querySelectorAll('.bet-option').forEach(el => el.style.pointerEvents = 'auto');
+    }
+    reset() {
+        this.state.isActive = false;
+        this.setControls(false);
+        this.state.selectedSide = null;
+        this.elements.result.textContent = "Wybierz stronę i rzuć!";
+        this.elements.bettingOptions.querySelector('.selected')?.classList.remove('selected');
+    }
+}
+
+class Particles {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.mouse = null;
+        this.animate = this.animate.bind(this);
+    }
+    init() {
+        this.resize();
+        this.createParticles();
+        this.animate();
+        window.addEventListener('resize', () => this.resize());
+        window.addEventListener('mousemove', e => { this.mouse = { x: e.clientX, y: e.clientY }; });
+        window.addEventListener('mouseout', () => { this.mouse = null; });
+    }
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        if(this.particles.length > 0) this.createParticles();
+    }
+    createParticles() {
+        this.particles = [];
+        const count = Math.floor(this.canvas.width * this.canvas.height / 25000);
+        for (let i = 0; i < count; i++) {
+            this.particles.push({
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+            });
+        }
+    }
+    draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-neon');
+        this.particles.forEach(p => {
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        });
+    }
+    update() {
+        this.particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+            if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+            if (this.mouse) {
+                const dist = Math.hypot(this.mouse.x - p.x, this.mouse.y - p.y);
+                if (dist < 180) {
+                    p.x -= (this.mouse.x - p.x) * 0.01;
+                    p.y -= (this.mouse.y - p.y) * 0.01;
+                }
+            }
+        });
+    }
+    animate() {
+        this.draw();
+        this.update();
+        requestAnimationFrame(this.animate);
+    }
+}
+
+class Gallery {
+    constructor() {
+        this.els = {
+            lightbox: document.getElementById('lightbox'),
+            img: document.getElementById('lightbox-img'),
+            title: document.getElementById('lightbox-title'),
+            desc: document.getElementById('lightbox-desc'),
+            close: document.getElementById('lightbox-close'),
+            items: document.querySelectorAll('.gallery-item')
+        };
+    }
+    init() {
+        this.els.items.forEach(item => item.addEventListener('click', () => this.open(item)));
+        this.els.close.addEventListener('click', () => this.close());
+        this.els.lightbox.addEventListener('click', e => { if (e.target === this.els.lightbox) this.close(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && this.els.lightbox.classList.contains('show')) this.close(); });
+    }
+    open(item) {
+        this.els.img.src = item.querySelector('img').src;
+        this.els.title.textContent = item.dataset.title;
+        this.els.desc.textContent = item.dataset.desc;
+        this.els.lightbox.classList.add('show');
+    }
+    close() { this.els.lightbox.classList.remove('show'); }
+}
+
+class SnakeGame {
+    constructor(app) {
+        this.app = app;
+        this.canvas = document.getElementById('snake-canvas');
+        this.scoreEl = document.getElementById('snake-score');
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.tileSize = 24; this.gridSize = 20;
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.loop = this.loop.bind(this);
+    }
+    init() {
+        if (!this.canvas) return;
+        this.reset();
+        document.addEventListener('keydown', this.handleKeyDown);
+        this.loop();
+    }
+    reset() {
+        this.state = {
+            snake: [{ x: 10, y: 10 }],
+            apple: { x: 15, y: 15 },
+            velocity: { x: 0, y: 0 },
+            nextVelocity: { x: 0, y: 0 },
+            score: 0,
+            gameOver: false,
+        };
+        if(this.scoreEl) this.scoreEl.textContent = '0';
+    }
+    loop() {
+        if (this.state.gameOver) {
+            this.drawGameOver();
+            return;
+        }
+        if (this.state.velocity.x !== -this.state.nextVelocity.x || this.state.velocity.y !== -this.state.nextVelocity.y) {
+            this.state.velocity = this.state.nextVelocity;
+        }
+        
+        const head = { x: this.state.snake[0].x + this.state.velocity.x, y: this.state.snake[0].y + this.state.velocity.y };
+
+        if (head.x < 0) head.x = this.gridSize - 1; if (head.x >= this.gridSize) head.x = 0;
+        if (head.y < 0) head.y = this.gridSize - 1; if (head.y >= this.gridSize) head.y = 0;
+
+        this.state.snake.unshift(head);
+
+        for(let i=1; i < this.state.snake.length; i++){
+            if(head.x === this.state.snake[i].x && head.y === this.state.snake[i].y){
+                this.endGame();
+            }
+        }
+        
+        if (head.x === this.state.apple.x && head.y === this.state.apple.y) {
+            this.app.sound.play('click');
+            this.state.score++;
+            this.scoreEl.textContent = this.state.score;
+            this.app.achievements.stats.snake_max_score = Math.max(this.app.achievements.stats.snake_max_score, this.state.score);
+            this.app.achievements.check();
+            this.placeApple();
+        } else {
+            this.state.snake.pop();
+        }
+        
+        this.draw();
+        setTimeout(this.loop, 1000 / 15);
+    }
+    placeApple() {
+        this.state.apple.x = Math.floor(Math.random() * this.gridSize);
+        this.state.apple.y = Math.floor(Math.random() * this.gridSize);
+    }
+    draw() {
+        this.ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark');
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--green-neon');
+        this.state.snake.forEach(part => this.ctx.fillRect(part.x * this.tileSize, part.y * this.tileSize, this.tileSize - 2, this.tileSize - 2));
+        this.ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--secondary-neon');
+        this.ctx.fillRect(this.state.apple.x * this.tileSize, this.state.apple.y * this.tileSize, this.tileSize - 2, this.tileSize - 2);
+    }
+    drawGameOver() {
+        this.ctx.fillStyle = "rgba(10, 15, 31, 0.75)";
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--red-neon');
+        this.ctx.font = "40px 'Roboto Mono'";
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.fillText("GAME OVER", this.canvas.width / 2, this.canvas.height / 2 - 20);
+        this.ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-light');
+        this.ctx.font = "20px 'Roboto Mono'";
+        this.ctx.fillText("Naciśnij 'R', aby zagrać ponownie", this.canvas.width / 2, this.canvas.height / 2 + 20);
+    }
+    endGame() {
+        this.app.sound.play('lose');
+        this.state.gameOver = true;
+    }
+    handleKeyDown(e) {
+        if (e.target.tagName === 'INPUT') return;
+        const keyMap = { ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 }, ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 }};
+        if (this.state.gameOver && e.key.toLowerCase() === 'r') {
+            this.reset();
+            this.loop();
+            return;
+        }
+        if (keyMap[e.key]) {
+            e.preventDefault();
+            const newVel = keyMap[e.key];
+            if(this.state.velocity.x !== 0 || this.state.velocity.y !== 0) {
+                 if (this.state.velocity.x === -newVel.x || this.state.velocity.y === -newVel.y) return;
+            }
+            this.state.nextVelocity = newVel;
+        }
+    }
+}
+
+
+window.addEventListener('DOMContentLoaded', () => {
+    window.app = new App();
+});
+
+</script>
 </body>
 </html>
